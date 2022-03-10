@@ -1,0 +1,19 @@
+{
+  "name": "elm-storybook-vite",
+  "version": "1.0.0",
+  "description": "Create a design system with Elm!",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm i && npm run dev",
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "keywords": [],
+  "author": "Ryan Haskell-Glatz",
+  "license": "ISC",
+  "devDependencies": {
+    "elm": "^0.19.1-5",
+    "vite": "^2.8.6",
+    "vite-plugin-elm": "^2.5.1"
+  }
+}

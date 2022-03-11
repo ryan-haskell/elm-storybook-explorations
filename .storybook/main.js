@@ -1,3 +1,8 @@
+const Elm = require('vite-plugin-elm')
+const path = require('path')
+
+const folder = path.resolve(__dirname, './elm-storybook')
+
 module.exports = {
   "stories": [
     "../src/**/*.stories.mdx",
@@ -10,5 +15,13 @@ module.exports = {
   "framework": "@storybook/html",
   "core": {
     "builder": "storybook-builder-vite"
+  },
+  async viteFinal (config) {
+    // Allow .elm files to be imported
+    config.plugins.push(Elm.plugin({ debug: false }))
+    config.resolve = config.resolve || {}
+    config.resolve.alias = config.resolve.alias || {}
+    config.resolve.alias['elm-storybook'] = folder
+    return config
   }
 }

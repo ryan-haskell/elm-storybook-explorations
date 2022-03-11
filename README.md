@@ -1,8 +1,8 @@
 # elm-storybook-vite
 > Create a design system with Elm!
 
-### local development
+### try it out
 
 ```
-npm start
+npm run storybook
 ```

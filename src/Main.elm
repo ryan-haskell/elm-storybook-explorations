@@ -1,8 +1,9 @@
 module Main exposing (main)
 
 import Html exposing (Html)
+import Ui.Typography
 
 
 main : Html msg
 main =
-    Html.text "Wow, it's an Elm app!"
+    Ui.Typography.h1 "This is my Elm app!"

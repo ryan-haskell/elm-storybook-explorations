@@ -25,5 +25,7 @@
     "vite": "^2.8.6",
     "vite-plugin-elm": "^2.5.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "elm-storybook": "file:./.storybook/elm-storybook/index"
+  }
 }

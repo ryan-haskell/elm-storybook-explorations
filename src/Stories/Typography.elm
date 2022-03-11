@@ -14,7 +14,7 @@ main =
             Storybook.Argument.new Arguments
                 |> Storybook.Argument.withString
                     { name = "label"
-                    , fallback = "Header"
+                    , fallback = "Header text"
                     }
                 |> Storybook.Argument.withEnum
                     { name = "kind"

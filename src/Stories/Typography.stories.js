@@ -8,17 +8,20 @@ export default {
   title: 'Ui.Typography',
   parameters: {
     layout: 'centered'
+  },
+  argTypes: {
+    label: { control: { type: 'text' } }
   }
 }
 
-export const Heading1 = () =>
-  Typography({ kind: 'h1', label: 'Heading 1' })
+export const Heading1 = (args) =>
+  Typography({ ...args, kind: 'h1' })
 
-export const Heading2 = () =>
-  Typography({ kind: 'h2', label: 'Heading 2' })
+export const Heading2 = (args) =>
+  Typography({ ...args, kind: 'h2' })
 
-export const Heading3 = () =>
-  Typography({ kind: 'h3', label: 'Heading 3' })
+export const Heading3 = (args) =>
+  Typography({ ...args, kind: 'h3' })
 
-export const Heading4 = () =>
-  Typography({ kind: 'h4', label: 'Heading 4' })
+export const Heading4 = (args) =>
+  Typography({ ...args, kind: 'h4' })

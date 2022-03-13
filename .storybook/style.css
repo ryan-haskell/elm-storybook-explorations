@@ -22,3 +22,30 @@ body {
   text-transform: uppercase;
   color: #888;
 }
+
+.button {
+  cursor: pointer;
+  border: 0;
+  padding: 0.75em 1.25em;
+  border-radius: 5em;
+}
+
+.button--primary {
+  background-color: dodgerblue;
+  color: white;
+}
+
+.button--secondary {
+  background-color: white;
+  color: dodgerblue;
+  border: solid 1px;
+}
+
+.button--danger {
+  background-color: indianred;
+  color: white;
+}
+
+.button:hover {
+  opacity: 0.8;
+}

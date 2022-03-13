@@ -1,27 +1,63 @@
-module Storybook.Component exposing
-    ( Component
-    , new
+port module Storybook.Component exposing
+    ( Component, new
+    , Msg, log, logWithPayload
     )
+
+{-|
+
+@docs Component, new
+@docs Msg, log, logWithPayload
+
+-}
 
 import Browser
 import Html exposing (Html)
 import Json.Decode as Json
+import Json.Encode
 import Storybook.Argument
 
 
 type alias Component =
-    Program Json.Value Json.Value ()
+    Program Json.Value Model Msg
+
+
+type alias Model =
+    Json.Value
+
+
+type Msg
+    = Log
+        { actionName : String
+        , payload : Json.Value
+        }
+
+
+log : { actionName : String } -> Msg
+log { actionName } =
+    Log
+        { actionName = actionName
+        , payload = Json.Encode.object []
+        }
+
+
+logWithPayload :
+    { actionName : String
+    , payload : Json.Value
+    }
+    -> Msg
+logWithPayload =
+    Log
 
 
 new :
-    { view : arguments -> Html ()
+    { view : arguments -> Html Msg
     , decoder : Storybook.Argument.Decoder arguments
     }
     -> Component
 new options =
     Browser.element
         { init = \json -> ( json, Cmd.none )
-        , update = \_ model -> ( model, Cmd.none )
+        , update = update
         , view =
             \json ->
                 options.decoder
@@ -29,3 +65,19 @@ new options =
                     |> options.view
         , subscriptions = \_ -> Sub.none
         }
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        Log action ->
+            ( model
+            , logAction action
+            )
+
+
+port logAction :
+    { actionName : String
+    , payload : Json.Value
+    }
+    -> Cmd msg

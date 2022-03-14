@@ -1,4 +1,5 @@
-import './style.css'
+import '../src/style.css'
+import './storybook.css'
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -7,5 +8,5 @@ export const parameters = {
       color: /(background|color)$/i,
       date: /Date$/,
     },
-  },
+  }
 }

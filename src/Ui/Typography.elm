@@ -1,4 +1,4 @@
-module Ui.Typography exposing (h1, h2, h3, h4)
+module Ui.Typography exposing (h1, h2, h3, h4, p)
 
 import Html exposing (Html)
 import Html.Attributes as Attr
@@ -22,3 +22,8 @@ h3 str =
 h4 : String -> Html msg
 h4 str =
     Html.h4 [ Attr.class "h4" ] [ Html.text str ]
+
+
+p : String -> Html msg
+p str =
+    Html.p [ Attr.class "p" ] [ Html.text str ]

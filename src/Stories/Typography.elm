@@ -24,6 +24,7 @@ main =
                         , ( "h2", H2 )
                         , ( "h3", H3 )
                         , ( "h4", H4 )
+                        , ( "p", Paragraph )
                         ]
                     }
         }
@@ -40,6 +41,7 @@ type Kind
     | H2
     | H3
     | H4
+    | Paragraph
 
 
 view : Arguments -> Html msg
@@ -56,3 +58,6 @@ view args =
 
         H4 ->
             Ui.Typography.h4 args.label
+
+        Paragraph ->
+            Ui.Typography.p args.label

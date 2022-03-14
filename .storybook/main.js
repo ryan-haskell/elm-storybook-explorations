@@ -9,8 +9,9 @@ module.exports = {
     "../src/**/*.stories.@(js|jsx|ts|tsx)"
   ],
   "addons": [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials"
+    "@storybook/addon-a11y",
+    "@storybook/addon-actions",
+    "@storybook/addon-controls",
   ],
   "framework": "@storybook/html",
   "core": {

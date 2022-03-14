@@ -1,0 +1,8 @@
+/* This fixes issues when Zooming on centered components */
+html {
+  height: 100%;
+}
+
+.sb-show-main.sb-main-centered {
+  min-height: 100%;
+}

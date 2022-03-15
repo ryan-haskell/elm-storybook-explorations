@@ -13,8 +13,8 @@ If you have the latest version of [Node.js](https://nodejs.org) installed, this 
 
 ```bash
 # Get the code...
-git clone https://github.com/ryannhg/elm-storybook-vite
-cd elm-storybook-vite
+git clone https://github.com/ryannhg/elm-storybook
+cd elm-storybook
 
 # and run it with node!
 npm install

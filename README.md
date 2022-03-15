@@ -1,4 +1,4 @@
-# @ryannhg/elm-storybook-vite
+# @ryannhg/elm-storybook
 > Build your next design system with [Elm](https://elm-lang.org) and [Storybook](https://storybook.js.org)!
 
 ![Screenshot of Elm in Storybook](./.storybook/elm-storybook/demo.gif)
@@ -13,8 +13,8 @@ If you have the latest version of [Node.js](https://nodejs.org) installed, this 
 
 ```bash
 # Get the code...
-git clone https://github.com/ryannhg/elm-storybook-vite
-cd elm-storybook-vite
+git clone https://github.com/ryannhg/elm-storybook
+cd elm-storybook
 
 # and run it with node!
 npm install

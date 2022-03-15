@@ -1,4 +1,4 @@
-# @ryannhg/elm-storybook-vite
+# @ryannhg/elm-storybook
 > Build your next design system with [Elm](https://elm-lang.org) and [Storybook](https://storybook.js.org)!
 
 ![Screenshot of Elm in Storybook](./.storybook/elm-storybook/demo.gif)

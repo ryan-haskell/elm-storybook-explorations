@@ -25,7 +25,9 @@ npm run storybook
 
 [Storybook](https://storybook.js.org) describes itself as "_an open source tool for building UI components and pages in isolation_". It's a popular tool for creating __design systems__ in your favorite language/framework.
 
-This repo is an example of how to use Storybook, with [Elm](https://elm-lang.org). Elm is a great way to build reliable web applications. It doesn't throw any runtime errors in the browser, and it has __really friendly__ compiler messages as you code.
+This repo is an example of how to use Storybook with [Elm](https://elm-lang.org). Elm is a delightful language for building reliable web apps. It doesn't throw any runtime errors in the browser, and it has __really friendly__ compiler messages as you code.
+
+By powering our Elm/Storybook app with [Vite](https://vitejs.dev), we're able to iterate on our Elm components, and combine Elm's lightning-fast compiler with Vite's lightning-fast dev server. This means instant style changes, in-browser error messages, and an overall good time. 😎
 
 ## "What can I do with it?"
 

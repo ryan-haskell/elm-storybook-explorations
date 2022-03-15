@@ -81,7 +81,6 @@ body {
 .tabs {
   display: flex;
   flex-direction: column;
-  gap: 16px;
   align-items: flex-start;
 }
 
@@ -98,17 +97,17 @@ body {
   background: white;
   border: solid 1px #ccc;
   border-right: 0;
+  border-bottom: 0;
 }
 
 .tabs__button:first-child {
   border-top-left-radius: 0.25rem;
-  border-bottom-left-radius: 0.25rem;
 }
 
 .tabs__button:last-child {
   border-right: solid 1px #ccc;
   border-top-right-radius: 0.25rem;
-  border-bottom-right-radius: 0.25rem;
+  
 }
 
 .tabs__button--selected {
@@ -124,4 +123,5 @@ body {
   flex-direction: column;
   border: solid 1px #ccc;
   border-radius: 0.25rem;
+  border-top-left-radius: 0;
 }

@@ -29,7 +29,7 @@ This repo is an example of how to use Storybook, with [Elm](https://elm-lang.org
 
 ## "What can I do with it?"
 
-This repo has example of how you can:
+Storybook has a lot of great plugins that make working with a design/product team feel awesome. This repo has examples of how you can leverage many of those features in Elm:
 
 ### ❤️ __Accessibility__
 Make your UI more user-friendly for everyone, by getting things like color-contrast warnings or invalid HTML in the "Accessibility" tab.

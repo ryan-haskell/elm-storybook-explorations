@@ -1,15 +1,12 @@
 port module Storybook.Component exposing
-    ( Component, stateless, sandbox
-    , Msg, log, logWithPayload
-    , sendMessage, sendMessageAndLogAction
+    ( Component
+    , stateless, sandbox
     )
 
 {-|
 
-@docs Component, stateless, sandbox
-@docs Msg, log, logWithPayload
-
-@docs sendMessage, sendMessageAndLogAction
+@docs Component
+@docs stateless, sandbox
 
 -}
 
@@ -43,16 +40,6 @@ type Msg msg
     | ComponentSentMessageAndLoggedAction { msg : msg, action : Action }
 
 
-sendMessage : msg -> Msg msg
-sendMessage =
-    ComponentSentMessage
-
-
-sendMessageAndLogAction : { msg : msg, action : Action } -> Msg msg
-sendMessageAndLogAction =
-    ComponentSentMessageAndLoggedAction
-
-
 mapMsg : (msg1 -> msg2) -> Msg msg1 -> Msg msg2
 mapMsg fn msg =
     case msg of
@@ -69,25 +56,8 @@ mapMsg fn msg =
                 }
 
 
-log : { name : String } -> Msg msg
-log { name } =
-    UserLoggedMessage
-        { name = name
-        , payload = Json.Encode.object []
-        }
-
-
-logWithPayload :
-    { name : String
-    , payload : Json.Value
-    }
-    -> Msg msg
-logWithPayload =
-    UserLoggedMessage
-
-
 stateless :
-    { view : controls -> Html (Msg msg)
+    { view : controls -> Html msg
     , controls : Storybook.Controls.Decoder controls
     }
     -> Component () msg
@@ -106,6 +76,7 @@ stateless options =
                 options.controls
                     |> Storybook.Controls.decode model.controls
                     |> options.view
+                    |> Html.map logMessageAndAction
         , subscriptions = \_ -> Sub.none
         }
 
@@ -114,7 +85,7 @@ sandbox :
     { controls : Storybook.Controls.Decoder controls
     , init : model
     , update : msg -> model -> model
-    , view : controls -> model -> Html (Msg msg)
+    , view : controls -> model -> Html msg
     }
     -> Component model msg
 sandbox options =
@@ -135,7 +106,19 @@ sandbox options =
                         options.controls
                     )
                     model.component
+                    |> Html.map logMessageAndAction
         , subscriptions = \_ -> Sub.none
+        }
+
+
+logMessageAndAction : msg -> Msg msg
+logMessageAndAction msg =
+    ComponentSentMessageAndLoggedAction
+        { msg = msg
+        , action =
+            { name = "onAction"
+            , payload = Json.Encode.string (Debug.toString msg)
+            }
         }
 
 

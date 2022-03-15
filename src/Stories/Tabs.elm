@@ -29,25 +29,6 @@ type Tab
     | Danger
 
 
-toTabLabel : Tab -> String
-toTabLabel tab =
-    case tab of
-        Primary ->
-            "Primary"
-
-        Secondary ->
-            "Secondary"
-
-        Danger ->
-            "Danger"
-
-
-viewTabContent : Tab -> Html msg
-viewTabContent tab =
-    Ui.Typography.markdown
-        ("This is content for the __" ++ toTabLabel tab ++ "__ tab! \n\nIf you click a different tab above, you will see the previous paragraph change it's message.")
-
-
 
 -- INIT
 
@@ -82,23 +63,35 @@ update msg model =
 -- VIEW
 
 
-view : {} -> Model -> Html (Storybook.Component.Msg Msg)
+view : () -> Model -> Html Msg
 view controls model =
-    let
-        onTabClicked : Tab -> Storybook.Component.Msg Msg
-        onTabClicked tab =
-            Storybook.Component.sendMessageAndLogAction
-                { msg = UserClickedTab tab
-                , action =
-                    { name = "onTabClicked"
-                    , payload = Json.Encode.string (toTabLabel tab)
-                    }
-                }
-    in
     Ui.Tabs.view
         { selected = model.selected
         , tabs = [ Primary, Secondary, Danger ]
-        , onTabClicked = onTabClicked
+        , onTabClicked = UserClickedTab
         , toTabLabel = toTabLabel
         , viewTabContent = viewTabContent
         }
+
+
+toTabLabel : Tab -> String
+toTabLabel tab =
+    case tab of
+        Primary ->
+            "Primary"
+
+        Secondary ->
+            "Secondary"
+
+        Danger ->
+            "Danger"
+
+
+viewTabContent : Tab -> Html Msg
+viewTabContent tab =
+    Ui.Typography.markdown
+        (String.join "\n\n"
+            [ "This is content for the __" ++ toTabLabel tab ++ "__ tab!"
+            , "If you click a different tab above, you will see the previous paragraph change it's message."
+            ]
+        )

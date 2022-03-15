@@ -1,5 +1,7 @@
+// import source from './Button.elm?raw'
 import { Elm } from './Button.elm'
 import { ElmComponent } from 'elm-storybook'
+
 
 const Button = (flags) =>
   ElmComponent.create(Elm.Stories.Button, flags)
@@ -11,7 +13,7 @@ export default {
   },
   argTypes: {
     label: { control: { type: 'text' } },
-    onClick: { action: 'onClick' }
+    onAction: { action: 'Elm' }
   }
 }
 

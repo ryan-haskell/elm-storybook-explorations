@@ -31,11 +31,11 @@ new fn =
         }
 
 
-none : Decoder {}
+none : Decoder ()
 none =
     Decoder
-        { decoder = Json.succeed {}
-        , fallback = {}
+        { decoder = Json.succeed ()
+        , fallback = ()
         }
 
 

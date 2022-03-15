@@ -8,10 +8,11 @@ export default {
     controls: { hideNoControlsWarning: true }
   },
   argTypes: {
-    onTabClicked: { action: 'onTabClicked' }
+    onAction: { action: 'Elm' }
   }
 }
 
 export const Tabs = (controls) =>
   ElmComponent.create(Elm.Stories.Tabs, controls)
+
 Tabs.storyName = 'Ui.Tabs'

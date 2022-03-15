@@ -8,7 +8,7 @@ import Ui.Button
 import Ui.Typography
 
 
-main : Component () msg
+main : Component () Msg
 main =
     Storybook.Component.stateless
         { controls =
@@ -42,30 +42,27 @@ type Kind
     | Danger
 
 
-view : Controls -> Html (Storybook.Component.Msg msg)
+type Msg
+    = UserClickedButton
+
+
+view : Controls -> Html Msg
 view controls =
-    let
-        onClick : Storybook.Component.Msg msg
-        onClick =
-            Storybook.Component.log
-                { name = "onClick"
-                }
-    in
     case controls.kind of
         Primary ->
             Ui.Button.viewPrimary
                 { label = controls.label
-                , onClick = onClick
+                , onClick = UserClickedButton
                 }
 
         Secondary ->
             Ui.Button.viewSecondary
                 { label = controls.label
-                , onClick = onClick
+                , onClick = UserClickedButton
                 }
 
         Danger ->
             Ui.Button.viewDanger
                 { label = controls.label
-                , onClick = onClick
+                , onClick = UserClickedButton
                 }

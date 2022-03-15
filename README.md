@@ -5,7 +5,7 @@
 
 ## Live demo
 
-Check out [https://elm-storybook.netlify.app](https://elm-storybook.netlify.app) to see Elm and Storybook in action!
+Check out [elm-storybook.rhg.dev](https://elm-storybook.rhg.dev/) to see Elm and Storybook in action!
 
 ## Local development
 

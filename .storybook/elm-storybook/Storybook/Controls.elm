@@ -1,12 +1,12 @@
-module Storybook.Argument exposing
-    ( Decoder, new
+module Storybook.Controls exposing
+    ( Decoder, new, none
     , withString, withInt, withEnum
     , decode
     )
 
 {-|
 
-@docs Decoder, new
+@docs Decoder, new, none
 @docs withString, withInt, withEnum
 @docs decode
 
@@ -28,6 +28,14 @@ new fn =
     Decoder
         { decoder = Json.succeed fn
         , fallback = fn
+        }
+
+
+none : Decoder {}
+none =
+    Decoder
+        { decoder = Json.succeed {}
+        , fallback = {}
         }
 
 

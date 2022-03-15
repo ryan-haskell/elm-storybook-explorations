@@ -1,7 +1,21 @@
-module Ui.Typography exposing (h1, h2, h3, h4, p)
+module Ui.Typography exposing
+    ( h1, h2, h3
+    , p
+    , markdown
+    )
+
+{-|
+
+@docs h1, h2, h3
+@docs p
+
+@docs markdown
+
+-}
 
 import Html exposing (Html)
 import Html.Attributes as Attr
+import Markdown
 
 
 h1 : String -> Html msg
@@ -19,11 +33,11 @@ h3 str =
     Html.h3 [ Attr.class "h3" ] [ Html.text str ]
 
 
-h4 : String -> Html msg
-h4 str =
-    Html.h4 [ Attr.class "h4" ] [ Html.text str ]
-
-
 p : String -> Html msg
 p str =
     Html.p [ Attr.class "p" ] [ Html.text str ]
+
+
+markdown : String -> Html msg
+markdown str =
+    Markdown.toHtml [ Attr.class "markdown" ] str

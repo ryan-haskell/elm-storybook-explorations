@@ -15,11 +15,11 @@ export default {
   }
 }
 
-export const Primary = (args) =>
-  Button({ ...args, kind: 'primary' })
+export const Primary = (controls) =>
+  Button({ ...controls, kind: 'primary' })
 
-export const Secondary = (args) =>
-  Button({ ...args, kind: 'secondary' })
+export const Secondary = (controls) =>
+  Button({ ...controls, kind: 'secondary' })
 
-export const Danger = (args) =>
-  Button({ ...args, kind: 'danger' })
+export const Danger = (controls) =>
+  Button({ ...controls, kind: 'danger' })

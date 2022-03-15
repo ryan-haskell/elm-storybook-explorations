@@ -6,12 +6,12 @@ export const ElmComponent = {
 
       // Handle Storybook actions
       if (app.ports && app.ports.logAction) {
-        app.ports.logAction.subscribe(({ actionName, payload }) => {
-          let logStorybookAction = flags[actionName]
+        app.ports.logAction.subscribe(({ name, payload }) => {
+          let logStorybookAction = flags[name]
           if (logStorybookAction) {
             logStorybookAction(payload || null)
           } else {
-            console.warn(`Unhandled event: ${actionName}`)
+            console.warn(`Unhandled event: ${name}`)
           }
         })
       }

@@ -2,23 +2,22 @@ module Stories.Button exposing (main)
 
 import Html exposing (Html)
 import Json.Encode
-import Storybook.Argument
 import Storybook.Component exposing (Component)
+import Storybook.Controls
 import Ui.Button
 import Ui.Typography
 
 
-main : Component
+main : Component () msg
 main =
-    Storybook.Component.new
-        { view = view
-        , decoder =
-            Storybook.Argument.new Arguments
-                |> Storybook.Argument.withString
+    Storybook.Component.stateless
+        { controls =
+            Storybook.Controls.new Controls
+                |> Storybook.Controls.withString
                     { name = "label"
                     , fallback = "Create post"
                     }
-                |> Storybook.Argument.withEnum
+                |> Storybook.Controls.withEnum
                     { name = "kind"
                     , fallback = Primary
                     , options =
@@ -27,10 +26,11 @@ main =
                         , ( "danger", Danger )
                         ]
                     }
+        , view = view
         }
 
 
-type alias Arguments =
+type alias Controls =
     { label : String
     , kind : Kind
     }
@@ -42,29 +42,30 @@ type Kind
     | Danger
 
 
-view : Arguments -> Html Storybook.Component.Msg
-view args =
+view : Controls -> Html (Storybook.Component.Msg msg)
+view controls =
     let
+        onClick : Storybook.Component.Msg msg
         onClick =
             Storybook.Component.log
-                { actionName = "onClick"
+                { name = "onClick"
                 }
     in
-    case args.kind of
+    case controls.kind of
         Primary ->
             Ui.Button.viewPrimary
-                { label = args.label
+                { label = controls.label
                 , onClick = onClick
                 }
 
         Secondary ->
             Ui.Button.viewSecondary
-                { label = args.label
+                { label = controls.label
                 , onClick = onClick
                 }
 
         Danger ->
             Ui.Button.viewDanger
-                { label = args.label
+                { label = controls.label
                 , onClick = onClick
                 }

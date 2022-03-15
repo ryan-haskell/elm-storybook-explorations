@@ -5,32 +5,48 @@ body {
   color: #444;
 }
 
-.h1 {
+
+/* RESET */
+* {
+  margin: 0;
+}
+
+
+/* TYPOGRAPHY */
+
+.h1, .markdown h1 {
   font-size: 3rem;
   line-height: 1.15;
 }
 
-.h2 {
+.h2, .markdown h2 {
   font-size: 2rem;
 }
 
-.h3 {
-  font-size: 1.5rem;
-}
-
-.h4 {
-  font-size: 1rem;
+.h3, .markdown h3 {
+  font-size: 1.25rem;
   text-transform: uppercase;
   color: #666;
 }
 
-.p {
+.p, .markdown p {
   max-width: 60ch;
   line-height: 1.5;
   color: #666;
 }
 
+.markdown {
+  display: flex;
+  flex-direction: column;
+  max-width: 60ch;
+  gap: 1rem;
+}
+
+/* BUTTONS */
+
 .button {
+  font-family: inherit;
+  font-size: 14px;
   cursor: pointer;
   border: 0;
   padding: 0.75rem 1.25rem;
@@ -58,4 +74,54 @@ body {
 
 .button:hover {
   opacity: 0.8;
+}
+
+
+/* TABS */
+.tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.tabs__header {
+  display: flex;
+  flex-direction: row;
+}
+
+.tabs__button {
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0.5rem 1.25rem;
+  background: white;
+  border: solid 1px #ccc;
+  border-right: 0;
+}
+
+.tabs__button:first-child {
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+
+.tabs__button:last-child {
+  border-right: solid 1px #ccc;
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.tabs__button--selected {
+  background-color: #0073e6;
+  border-color: #0073e6;
+  color: white;
+}
+
+.tabs__content {
+  background: white;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  border: solid 1px #ccc;
+  border-radius: 0.25rem;
 }

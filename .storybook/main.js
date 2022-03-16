@@ -10,8 +10,8 @@ module.exports = {
   "addons": [
     "@storybook/addon-a11y",
     "@storybook/addon-actions",
-    "@storybook/addon-controls"
-    // "@storybook/addon-storysource"
+    "@storybook/addon-controls",
+    "./elm-storybook/addon/register"
   ],
   "framework": "@storybook/html",
   "core": {

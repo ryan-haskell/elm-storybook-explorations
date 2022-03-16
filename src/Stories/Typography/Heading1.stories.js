@@ -1,9 +1,10 @@
 import { Elm } from './Heading1.elm'
+import elmSource from './Heading1.elm?raw'
 import { ElmComponent } from 'elm-storybook'
 
 export default {
-  title: 'Ui.Typography',
-  parameters: { layout: 'centered' },
+  title: 'Typography',
+  parameters: { elmSource },
   argTypes: {
     label: { control: { type: 'text' } }
   }

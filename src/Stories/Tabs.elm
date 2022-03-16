@@ -24,9 +24,9 @@ main =
 
 
 type Tab
-    = Primary
-    | Secondary
-    | Danger
+    = Apple
+    | Banana
+    | Cherry
 
 
 
@@ -40,7 +40,7 @@ type alias Model =
 
 init : Model
 init =
-    { selected = Primary
+    { selected = Apple
     }
 
 
@@ -67,7 +67,7 @@ view : () -> Model -> Html Msg
 view controls model =
     Ui.Tabs.view
         { selected = model.selected
-        , tabs = [ Primary, Secondary, Danger ]
+        , tabs = [ Apple, Banana, Cherry ]
         , onTabClicked = UserClickedTab
         , toTabLabel = toTabLabel
         , viewTabContent = viewTabContent
@@ -77,14 +77,14 @@ view controls model =
 toTabLabel : Tab -> String
 toTabLabel tab =
     case tab of
-        Primary ->
-            "Primary"
+        Apple ->
+            "Apple"
 
-        Secondary ->
-            "Secondary"
+        Banana ->
+            "Banana"
 
-        Danger ->
-            "Danger"
+        Cherry ->
+            "Cherry"
 
 
 viewTabContent : Tab -> Html Msg

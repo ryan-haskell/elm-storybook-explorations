@@ -42,3 +42,6 @@ Easily see how a component performs with different size labels, color variations
 
 ### 💾 __Stateful__
 Just like with React or Vue, this repo let's your Elm components track their own state. For example, you can demo how your "Tab" component works with a tiny example
+
+### 👩‍💻 __Source code__
+See the Elm source code directly in the browser, using the "Source" tab! This makes it easy to see example usage and copy snippets into your project.

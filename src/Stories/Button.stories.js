@@ -1,5 +1,5 @@
-// import source from './Button.elm?raw'
 import { Elm } from './Button.elm'
+import elmSource from './Button.elm?raw'
 import { ElmComponent } from 'elm-storybook'
 
 
@@ -7,10 +7,8 @@ const Button = (flags) =>
   ElmComponent.create(Elm.Stories.Button, flags)
 
 export default {
-  title: 'Ui.Button',
-  parameters: {
-    layout: 'centered'
-  },
+  title: 'Button',
+  parameters: { elmSource },
   argTypes: {
     label: { control: { type: 'text' } },
     onAction: { action: 'Elm' }

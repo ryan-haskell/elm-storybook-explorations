@@ -2,7 +2,7 @@ import React from 'react';
 import { useParameter } from '@storybook/api';
 
 import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { nightOwl } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import elm from 'react-syntax-highlighter/dist/esm/languages/prism/elm'
 SyntaxHighlighter.registerLanguage('elm', elm)
 
@@ -12,7 +12,7 @@ export const StoryPanel = () => {
   return elmSource ? (
     <SyntaxHighlighter
       language="elm"
-      style={nightOwl}
+      style={oneLight}
       showLineNumbers={true}
     >
       {elmSource}

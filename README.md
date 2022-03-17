@@ -44,3 +44,16 @@ Easily see how a component performs with different size labels, color variations
 
 ### 👩‍💻 __Source__
 See the Elm source code directly in the browser, using the "Source" tab! This makes it easy to see example usage and copy snippets into your project.
+
+
+## "How do I use it?"
+
+Check out the [docs folder](./docs/README.md) to see guides on getting started and deploying to production!
+
+## Disclaimer
+
+I chose to make this code/documentation publically available because I'm a huge fan of [Storybook](https://storybook.js.org), [Vite](https://vitejs.dev) and [Elm](https://elm-lang.org)! They are awesome open-source tools, so I spent a bunch of my personal time getting them to work together. 
+
+My goal for this project is to share this resource with anyone trying to build cool stuff!
+
+I'm happy to share this work with the Open Source Software community– but have no plans to create an official package or maintain this for anyone or their company's needs. With all that out of the way, I hope you benefit from this codebase, and feel empowered to share all the __great things__ you make! 🎉

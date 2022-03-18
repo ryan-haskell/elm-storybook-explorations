@@ -140,6 +140,18 @@ The easiest way to get these files is to run this command at the root of your pr
 npx degit ryannhg/elm-storybook/.storybook .storybook
 ```
 
+### ❗️ Delete that `style.css` import
+
+Storybook allows you to add your own CSS/JS dependencies to the `.storybook/preview.js` file.
+
+For the example project, we have this on line 4 of `.storybook/preview.js`:
+
+```
+import '../src/style.css'
+```
+
+__Be sure to manually remove__ that CSS import after running `degit`, and feel free to add in any JS/CSS dependencies you need!
+
 ✅  __Did it work?__ You should now see a `.storybook` folder alongside your `src`. (You may need to run `ls -a` to see folders starting with `.`)
 
 

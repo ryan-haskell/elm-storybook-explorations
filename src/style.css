@@ -11,6 +11,15 @@ body {
   margin: 0;
 }
 
+button {
+  border: 0;
+  padding: 0;
+  line-height: 1;
+  white-space: nowrap;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
 
 /* TYPOGRAPHY */
 
@@ -45,13 +54,9 @@ body {
 /* BUTTONS */
 
 .button {
-  font-family: inherit;
   font-size: 14px;
-  cursor: pointer;
-  border: 0;
-  padding: 0.75rem 1.25rem;
+  padding: 0.5em 1.25em;
   border-radius: 0.25rem;
-  line-height: 1;
   transition: opacity 150ms ease-in-out;
   border: solid 1px transparent;
 }
@@ -90,14 +95,14 @@ body {
 }
 
 .tabs__button {
-  font: inherit;
+  position: relative;
   font-size: 14px;
-  cursor: pointer;
   padding: 0.5rem 1.25rem;
   background: white;
   border: solid 1px #ccc;
   border-right: 0;
   border-bottom: 0;
+  font-weight: bold;
 }
 
 .tabs__button:first-child {
@@ -107,7 +112,6 @@ body {
 .tabs__button:last-child {
   border-right: solid 1px #ccc;
   border-top-right-radius: 0.25rem;
-  
 }
 
 .tabs__button--selected {

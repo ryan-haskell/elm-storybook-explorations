@@ -1,5 +1,7 @@
-import '../src/style.css'
 import './storybook.css'
+
+// You can import any other JS/CSS your app needs here:
+import '../src/style.css'
 
 export const parameters = {
   layout: 'centered',

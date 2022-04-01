@@ -49,9 +49,11 @@ globalCss =
             , Css.backgroundColor Css.transparent
             , Css.borderStyle Css.none
             , Css.property "font" "inherit"
+            , Css.lineHeight Css.inherit
             ]
         , Css.Global.body
             [ Css.fontFamilies [ "Fira Sans", "sans-serif" ]
+            , Css.lineHeight (Css.int 1)
             ]
 
         -- col flex alignment

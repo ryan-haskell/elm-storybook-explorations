@@ -8,11 +8,11 @@ SyntaxHighlighter.registerLanguage('elm', elm)
 
 export const StoryPanel = () => {
   const elmSource = useParameter('elmSource', null);
-  
   return elmSource ? (
     <SyntaxHighlighter
       language="elm"
       style={oneLight}
+      customStyle={{margin: 0}}
       showLineNumbers={true}
     >
       {elmSource}

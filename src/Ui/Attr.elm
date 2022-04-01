@@ -10,8 +10,9 @@ module Ui.Attr exposing
     , padTop, padLeft, padRight, padBottom
     , elevation
     , transition
-    , whenHovered, whenDisabled, whenFocused, whenActive
+    , whenHovered, whenDisabled, whenFocused, whenPressed
     , cursor, outline
+    , inherit, wrap
     )
 
 {-|
@@ -34,8 +35,10 @@ module Ui.Attr exposing
 
 ## Interaction
 
-@docs whenHovered, whenDisabled, whenFocused, whenActive
+@docs whenHovered, whenDisabled, whenFocused, whenPressed
 @docs cursor, outline
+
+@docs inherit, wrap
 
 -}
 
@@ -43,6 +46,7 @@ import Css
 import Html.Styled
 import Html.Styled.Attributes
 import Ui.Palette
+import Ui.Transition
 
 
 type Attribute msg
@@ -81,6 +85,18 @@ list attrs =
 fontColor : Ui.Palette.Color -> Attribute msg
 fontColor color =
     Styles [ Css.color color ]
+
+
+inherit : { fontColor : Attribute msg }
+inherit =
+    { fontColor = Styles [ Css.color Css.inherit ]
+    }
+
+
+wrap : { none : Attribute msg }
+wrap =
+    { none = Styles [ Css.whiteSpace Css.noWrap ]
+    }
 
 
 backgroundColor : Ui.Palette.Color -> Attribute msg
@@ -186,29 +202,23 @@ typography options =
         ]
 
 
-transition : Int -> List String -> Attribute msg
-transition durationInMs properties =
-    Styles
-        [ Css.property "transition"
-            (properties
-                |> List.map
-                    (\name ->
-                        "{{name}} {{duration}}ms ease-in-out"
-                            |> String.replace "{{name}}" name
-                            |> String.replace "{{duration}}" (String.fromInt durationInMs)
-                    )
-                |> String.join ", "
-            )
-        ]
+transition : { ms100 : List Ui.Transition.Property -> Attribute msg }
+transition =
+    { ms100 = toTransition 100
+    }
 
 
 
 -- INTERACTION STATES
 
 
-outline : { none : Attribute msg }
+outline :
+    { none : Attribute msg
+    , px2 : Ui.Palette.Color -> Attribute msg
+    }
 outline =
     { none = Styles [ Css.outline Css.none ]
+    , px2 = toOutline 2
     }
 
 
@@ -234,17 +244,29 @@ whenDisabled attrs =
 
 whenFocused : List (Attribute msg) -> Attribute msg
 whenFocused attrs =
+    let
+        styles : List Css.Style
+        styles =
+            keepOnlyCssStyles attrs
+    in
     Styles
-        [ Css.focus (keepOnlyCssStyles attrs)
-        , Css.hover [ Css.focus (keepOnlyCssStyles attrs) ]
+        [ Css.focus styles
+        , Css.hover [ Css.focus styles ]
         ]
 
 
-whenActive : List (Attribute msg) -> Attribute msg
-whenActive attrs =
+whenPressed : List (Attribute msg) -> Attribute msg
+whenPressed attrs =
+    let
+        styles : List Css.Style
+        styles =
+            keepOnlyCssStyles attrs
+    in
     Styles
-        [ Css.active (keepOnlyCssStyles attrs)
-        , Css.hover [ Css.active (keepOnlyCssStyles attrs) ]
+        [ Css.active styles
+        , Css.hover [ Css.active styles ]
+        , Css.focus [ Css.active styles ]
+        , Css.hover [ Css.focus [ Css.active styles ] ]
         ]
 
 
@@ -504,3 +526,27 @@ keepOnlyCssStyles attrs =
     in
     attrs
         |> List.concatMap toCssStyles
+
+
+toTransition : Int -> List Ui.Transition.Property -> Attribute msg
+toTransition durationInMs properties =
+    Styles
+        [ Css.property "transition"
+            (properties
+                |> List.map
+                    (\name ->
+                        "{{name}} {{duration}}ms ease-in-out"
+                            |> String.replace "{{name}}" (Ui.Transition.toCssPropertyName name)
+                            |> String.replace "{{duration}}" (String.fromInt durationInMs)
+                    )
+                |> String.join ", "
+            )
+        ]
+
+
+toOutline : Float -> Ui.Palette.Color -> Attribute msg
+toOutline px color =
+    Styles
+        [ Css.outlineOffset Css.zero
+        , Css.outline3 (Css.px px) Css.solid color
+        ]

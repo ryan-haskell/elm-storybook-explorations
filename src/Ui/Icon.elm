@@ -1,6 +1,6 @@
 module Ui.Icon exposing
     ( Icon, toClassName
-    , more, search
+    , arrowLeft, arrowRight, caretDown, more, search, trash
     )
 
 {-| More icons available here:
@@ -32,3 +32,23 @@ more =
 search : Icon
 search =
     Icon "search"
+
+
+arrowLeft : Icon
+arrowLeft =
+    Icon "arrow-left"
+
+
+arrowRight : Icon
+arrowRight =
+    Icon "arrow-right"
+
+
+caretDown : Icon
+caretDown =
+    Icon "caret-down"
+
+
+trash : Icon
+trash =
+    Icon "trash"

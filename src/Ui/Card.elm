@@ -9,6 +9,10 @@ module Ui.Card exposing
 @docs view
 
 @docs Option
+
+
+### Used by Storybook
+
 @docs alwaysEnabled, alwaysDisabled, alwaysFocused, alwaysHovered
 
 -}
@@ -16,6 +20,7 @@ module Ui.Card exposing
 import Ui
 import Ui.Attr
 import Ui.Palette
+import Ui.Transition
 
 
 
@@ -79,6 +84,14 @@ view options content =
             , Ui.Attr.backgroundColor Ui.Palette.n50
             ]
 
+        pressedAttributes : List (Ui.Attribute msg)
+        pressedAttributes =
+            [ Ui.Attr.outline.none
+            , Ui.Attr.elevation.level1
+            , Ui.Attr.border.px1 Ui.Palette.b400
+            , Ui.Attr.backgroundColor Ui.Palette.b50
+            ]
+
         disabledAttributes : List (Ui.Attribute msg)
         disabledAttributes =
             [ Ui.Attr.outline.none
@@ -98,11 +111,15 @@ view options content =
             Normal ->
                 Ui.Attr.list
                     [ Ui.Attr.list enabledAttributes
-                    , Ui.Attr.transition 150 [ "box-shadow", "background", "border" ]
+                    , Ui.Attr.transition.ms100
+                        [ Ui.Transition.elevation
+                        , Ui.Transition.background
+                        , Ui.Transition.borderColor
+                        ]
                     , Ui.Attr.whenHovered hoveredAttributes
                     , Ui.Attr.whenDisabled disabledAttributes
                     , Ui.Attr.whenFocused focusedAttributes
-                    , Ui.Attr.whenActive focusedAttributes
+                    , Ui.Attr.whenPressed pressedAttributes
                     ]
 
             ForceEnabled ->

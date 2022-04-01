@@ -4,10 +4,10 @@
   "description": "Create a design system with Elm!",
   "main": "index.js",
   "scripts": {
-    "start": "npm i && npm run dev",
-    "dev": "vite",
-    "build": "vite build",
-    "storybook": "start-storybook -p 6006",
+    "start": "npm i && npm run storybook:watch",
+    "app:watch": "vite",
+    "app:build": "vite build",
+    "storybook:watch": "start-storybook -p 6006",
     "storybook:build": "build-storybook -o dist"
   },
   "keywords": [],

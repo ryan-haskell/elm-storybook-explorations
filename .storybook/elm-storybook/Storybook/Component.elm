@@ -11,11 +11,10 @@ port module Storybook.Component exposing
 -}
 
 import Browser
-import Html exposing (Html)
 import Json.Decode as Json
 import Json.Encode
 import Storybook.Controls
-import Task
+import Ui
 
 
 type alias Component model msg =
@@ -26,13 +25,13 @@ type alias Component model msg =
 
 
 stateless :
-    { view : controls -> Html msg
+    { view : controls -> Ui.Html msg
     , controls : Storybook.Controls.Decoder controls
     }
     -> Component () msg
 stateless options =
     let
-        view : ComponentModel () -> Html msg
+        view : ComponentModel () -> Ui.Html msg
         view model =
             options.controls
                 |> Storybook.Controls.decode model.controls
@@ -47,7 +46,7 @@ stateless options =
                 , Cmd.none
                 )
         , update = update (\_ model -> model)
-        , view = view
+        , view = view >> Ui.toHtml
         , subscriptions = \_ -> Sub.none
         }
 
@@ -56,7 +55,7 @@ sandbox :
     { controls : Storybook.Controls.Decoder controls
     , init : model
     , update : msg -> model -> model
-    , view : controls -> model -> Html msg
+    , view : controls -> model -> Ui.Html msg
     }
     -> Component model msg
 sandbox options =
@@ -69,7 +68,7 @@ sandbox options =
             , Cmd.none
             )
 
-        view : ComponentModel model -> Html msg
+        view : ComponentModel model -> Ui.Html msg
         view model =
             options.view
                 (Storybook.Controls.decode
@@ -81,7 +80,7 @@ sandbox options =
     Browser.element
         { init = init
         , update = update options.update
-        , view = view
+        , view = view >> Ui.toHtml
         , subscriptions = \_ -> Sub.none
         }
 

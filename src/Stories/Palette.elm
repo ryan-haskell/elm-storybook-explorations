@@ -22,7 +22,7 @@ main =
 
 view : () -> Ui.Html msg
 view _ =
-    Ui.col [ Ui.Attr.gap.px32 ] (List.map viewSection sections)
+    Ui.col [ Ui.Attr.gap.px40 ] (List.map viewSection sections)
 
 
 type alias Section =

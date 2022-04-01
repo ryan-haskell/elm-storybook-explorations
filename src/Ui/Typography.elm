@@ -13,9 +13,6 @@ module Ui.Typography exposing
 
 -}
 
-import Css
-import Html.Styled
-import Html.Styled.Attributes
 import Ui
 import Ui.Attr
 import Ui.Palette
@@ -236,20 +233,32 @@ viewTypography :
     , attributes : List (Ui.Attribute msg)
     , text : String
     }
-    -> Html.Styled.Html msg
+    -> Ui.Html msg
 viewTypography options =
-    Html.Styled.span
+    Ui.el
         ([ Ui.Attr.fontColor options.color
-         , Html.Styled.Attributes.css
-            [ Css.fontSize (Css.px options.fontSize)
-            , Css.lineHeight (Css.px options.lineHeight)
-            , Css.fontWeight (Css.int (fromFontWeightToInt options.weight))
-            , Css.fontFamilies (toFontFamilies options.family)
-            ]
+         , toUiTypographyAttr options
          ]
             ++ options.attributes
         )
-        [ Html.Styled.text options.text ]
+        (Ui.text options.text)
+
+
+toUiTypographyAttr :
+    { options
+        | fontSize : Float
+        , lineHeight : Float
+        , weight : Weight
+        , family : Family
+    }
+    -> Ui.Attribute msg
+toUiTypographyAttr options =
+    Ui.Attr.typography
+        { fontSize = options.fontSize
+        , lineHeight = options.lineHeight
+        , weight = fromFontWeightToInt options.weight
+        , families = toFontFamilies options.family
+        }
 
 
 type Weight

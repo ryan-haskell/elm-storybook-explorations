@@ -2,6 +2,7 @@ module Ui exposing
     ( Html, Attribute, toHtml
     , none, text
     , el, row, col
+    , clickable
     , icon
     )
 
@@ -10,6 +11,8 @@ module Ui exposing
 @docs Html, Attribute, toHtml
 @docs none, text
 @docs el, row, col
+@docs clickable
+@docs icon
 
 -}
 
@@ -32,7 +35,7 @@ type alias Attribute msg =
 
 toHtml : Html msg -> Html.Html msg
 toHtml html =
-    Html.Styled.toUnstyled (Html.Styled.div topLevelAttributes [ globalCss, html ])
+    Html.Styled.toUnstyled (Html.Styled.div (List.concatMap Ui.Attr.toAttributes topLevelAttributes) [ globalCss, html ])
 
 
 globalCss : Html msg
@@ -99,33 +102,20 @@ icon icon_ =
 
 row : List (Attribute msg) -> List (Html msg) -> Html msg
 row attrs children =
-    let
-        styles : List Css.Style
-        styles =
-            [ Css.displayFlex
-            ]
-    in
-    Html.Styled.div
+    createNode Html.Styled.div
         (Html.Styled.Attributes.class "elm-row"
-            :: Html.Styled.Attributes.css styles
-            :: attrs
+            :: Html.Styled.Attributes.css rowStyles
+            :: List.concatMap Ui.Attr.toAttributes attrs
         )
         children
 
 
 col : List (Attribute msg) -> List (Html msg) -> Html msg
 col attrs children =
-    let
-        styles : List Css.Style
-        styles =
-            [ Css.displayFlex
-            , Css.flexDirection Css.column
-            ]
-    in
-    Html.Styled.div
+    createNode Html.Styled.div
         (Html.Styled.Attributes.class "elm-col"
-            :: Html.Styled.Attributes.css styles
-            :: attrs
+            :: Html.Styled.Attributes.css colStyles
+            :: List.concatMap Ui.Attr.toAttributes attrs
         )
         children
 
@@ -133,3 +123,38 @@ col attrs children =
 el : List (Attribute msg) -> Html msg -> Html msg
 el attrs child =
     row attrs [ child ]
+
+
+clickable : List (Attribute msg) -> Html msg -> Html msg
+clickable attrs child =
+    createNode Html.Styled.button
+        (Html.Styled.Attributes.class "elm-row"
+            :: Html.Styled.Attributes.css rowStyles
+            :: List.concatMap Ui.Attr.toAttributes attrs
+        )
+        [ child ]
+
+
+
+-- INTERNALS
+
+
+createNode :
+    (List attr -> List html -> html)
+    -> List attr
+    -> List html
+    -> html
+createNode toNode attrs children =
+    toNode attrs children
+
+
+rowStyles : List Css.Style
+rowStyles =
+    [ Css.displayFlex ]
+
+
+colStyles : List Css.Style
+colStyles =
+    [ Css.displayFlex
+    , Css.flexDirection Css.column
+    ]

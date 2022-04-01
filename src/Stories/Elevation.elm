@@ -24,7 +24,7 @@ view : () -> Ui.Html msg
 view _ =
     Ui.col [ Ui.Attr.gap.px16 ]
         [ Ui.Typography.h800 [] "Elevation"
-        , Ui.row [ Ui.Attr.gap.px32 ]
+        , Ui.row [ Ui.Attr.gap.px40 ]
             [ viewSquare "No elevation" []
             , viewSquare "Elevation 1" [ Ui.Attr.elevation.level1 ]
             , viewSquare "Elevation 2" [ Ui.Attr.elevation.level2 ]

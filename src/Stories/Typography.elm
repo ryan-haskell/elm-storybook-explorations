@@ -4,7 +4,6 @@ import Storybook.Component exposing (Component)
 import Storybook.Controls
 import Ui
 import Ui.Attr
-import Ui.Palette exposing (..)
 import Ui.Typography
 
 

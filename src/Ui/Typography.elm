@@ -182,8 +182,8 @@ p100 attributes text =
 -- CODE
 
 
-code : List (Ui.Attribute msg) -> String -> Ui.Html msg
-code attributes str =
+codeMinimal : List (Ui.Attribute msg) -> String -> Ui.Html msg
+codeMinimal attributes str =
     viewTypography
         { color = Ui.Palette.n800
         , fontSize = 14
@@ -191,7 +191,7 @@ code attributes str =
         , weight = Regular
         , family = Monospace
         , attributes =
-            [ Ui.Attr.backgroundColor Ui.Palette.n300
+            [ Ui.Attr.backgroundColor Ui.Palette.n50
             , Ui.Attr.border.px1 Ui.Palette.n400
             , Ui.Attr.radius.px4
             , Ui.Attr.padXY.px8.px4
@@ -201,8 +201,8 @@ code attributes str =
         }
 
 
-codeMinimal : List (Ui.Attribute msg) -> String -> Ui.Html msg
-codeMinimal attributes str =
+code : List (Ui.Attribute msg) -> String -> Ui.Html msg
+code attributes str =
     viewTypography
         { color = Ui.Palette.b600
         , fontSize = 14

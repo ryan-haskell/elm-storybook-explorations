@@ -6,6 +6,7 @@ import Ui
 import Ui.Attr
 import Ui.Icon
 import Ui.Palette exposing (..)
+import Ui.Typography
 
 
 main : Component () msg
@@ -22,7 +23,7 @@ main =
 
 view : () -> Ui.Html msg
 view _ =
-    Ui.col [ Ui.Attr.gap.px16 ] (List.map viewSection sections)
+    Ui.col [ Ui.Attr.gap.px32 ] (List.map viewSection sections)
 
 
 type alias Section =
@@ -49,7 +50,7 @@ sections =
 viewSection : Section -> Ui.Html msg
 viewSection section =
     Ui.col [ Ui.Attr.gap.px8 ]
-        [ Ui.text section.title
+        [ Ui.Typography.h800 [] section.title
         , Ui.row [ Ui.Attr.gap.px8 ]
             (List.map viewSquare section.colors)
         ]

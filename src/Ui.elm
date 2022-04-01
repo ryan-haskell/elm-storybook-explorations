@@ -50,6 +50,22 @@ globalCss =
         , Css.Global.body
             [ Css.fontFamilies [ "Fira Sans", "sans-serif" ]
             ]
+
+        -- col flex alignment
+        , Css.Global.selector ".elm-col.elm-align-left" [ Css.alignItems Css.flexStart ]
+        , Css.Global.selector ".elm-col.elm-align-right" [ Css.alignItems Css.flexEnd ]
+        , Css.Global.selector ".elm-col.elm-align-top" [ Css.justifyContent Css.flexStart ]
+        , Css.Global.selector ".elm-col.elm-align-bottom" [ Css.justifyContent Css.flexEnd ]
+        , Css.Global.selector ".elm-col.elm-align-center-x" [ Css.alignItems Css.center ]
+        , Css.Global.selector ".elm-col.elm-align-center-y" [ Css.justifyContent Css.center ]
+
+        -- row flex alignment
+        , Css.Global.selector ".elm-row.elm-align-left" [ Css.justifyContent Css.flexStart ]
+        , Css.Global.selector ".elm-row.elm-align-right" [ Css.justifyContent Css.flexEnd ]
+        , Css.Global.selector ".elm-row.elm-align-top" [ Css.alignItems Css.flexStart ]
+        , Css.Global.selector ".elm-row.elm-align-bottom" [ Css.alignItems Css.flexEnd ]
+        , Css.Global.selector ".elm-row.elm-align-center-x" [ Css.justifyContent Css.center ]
+        , Css.Global.selector ".elm-row.elm-align-center-y" [ Css.alignItems Css.center ]
         ]
 
 
@@ -89,7 +105,12 @@ row attrs children =
             [ Css.displayFlex
             ]
     in
-    Html.Styled.div (Html.Styled.Attributes.css styles :: attrs) children
+    Html.Styled.div
+        (Html.Styled.Attributes.class "elm-row"
+            :: Html.Styled.Attributes.css styles
+            :: attrs
+        )
+        children
 
 
 col : List (Attribute msg) -> List (Html msg) -> Html msg
@@ -101,7 +122,12 @@ col attrs children =
             , Css.flexDirection Css.column
             ]
     in
-    Html.Styled.div (Html.Styled.Attributes.css styles :: attrs) children
+    Html.Styled.div
+        (Html.Styled.Attributes.class "elm-col"
+            :: Html.Styled.Attributes.css styles
+            :: attrs
+        )
+        children
 
 
 el : List (Attribute msg) -> Html msg -> Html msg

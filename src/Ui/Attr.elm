@@ -3,7 +3,9 @@ module Ui.Attr exposing
     , fontColor, backgroundColor
     , border, radius
     , width, height
-    , gap
+    , gap, align
+    , pad, padXY
+    , padTop, padLeft, padRight, padBottom
     )
 
 {-|
@@ -12,7 +14,10 @@ module Ui.Attr exposing
 @docs fontColor, backgroundColor
 @docs border, radius
 @docs width, height
-@docs gap
+@docs gap, align
+
+@docs pad, padXY
+@docs padTop, padLeft, padRight, padBottom
 
 -}
 
@@ -77,11 +82,121 @@ gap :
     { px4 : Attribute msg
     , px8 : Attribute msg
     , px16 : Attribute msg
+    , px32 : Attribute msg
     }
 gap =
     { px4 = toGap 4
     , px8 = toGap 8
     , px16 = toGap 16
+    , px32 = toGap 32
+    }
+
+
+align :
+    { center : Attribute msg
+    , centerX : Attribute msg
+    , centerY : Attribute msg
+    , top : Attribute msg
+    , left : Attribute msg
+    , bottom : Attribute msg
+    , right : Attribute msg
+    }
+align =
+    { center = Html.Styled.Attributes.css [ Css.alignItems Css.center, Css.alignItems Css.center ]
+    , centerX = Html.Styled.Attributes.class "elm-align-center-x"
+    , centerY = Html.Styled.Attributes.class "elm-align-center-y"
+    , top = Html.Styled.Attributes.class "elm-align-top"
+    , left = Html.Styled.Attributes.class "elm-align-left"
+    , bottom = Html.Styled.Attributes.class "elm-align-bottom"
+    , right = Html.Styled.Attributes.class "elm-align-right"
+    }
+
+
+
+-- PADDING
+
+
+pad :
+    { zero : Attribute msg
+    , px4 : Attribute msg
+    , px8 : Attribute msg
+    , px16 : Attribute msg
+    }
+pad =
+    toPadding "padding"
+
+
+padLeft :
+    { zero : Attribute msg
+    , px4 : Attribute msg
+    , px8 : Attribute msg
+    , px16 : Attribute msg
+    }
+padLeft =
+    toPadding "padding-left"
+
+
+padRight :
+    { zero : Attribute msg
+    , px4 : Attribute msg
+    , px8 : Attribute msg
+    , px16 : Attribute msg
+    }
+padRight =
+    toPadding "padding-right"
+
+
+padTop :
+    { zero : Attribute msg
+    , px4 : Attribute msg
+    , px8 : Attribute msg
+    , px16 : Attribute msg
+    }
+padTop =
+    toPadding "padding-top"
+
+
+padBottom :
+    { zero : Attribute msg
+    , px4 : Attribute msg
+    , px8 : Attribute msg
+    , px16 : Attribute msg
+    }
+padBottom =
+    toPadding "padding-bottom"
+
+
+padXY :
+    { zero :
+        { zero : Attribute msg
+        , px4 : Attribute msg
+        , px8 : Attribute msg
+        , px16 : Attribute msg
+        }
+    , px4 :
+        { zero : Attribute msg
+        , px4 : Attribute msg
+        , px8 : Attribute msg
+        , px16 : Attribute msg
+        }
+    , px8 :
+        { zero : Attribute msg
+        , px4 : Attribute msg
+        , px8 : Attribute msg
+        , px16 : Attribute msg
+        }
+    , px16 :
+        { zero : Attribute msg
+        , px4 : Attribute msg
+        , px8 : Attribute msg
+        , px16 : Attribute msg
+        }
+    }
+padXY =
+    { zero = toPadXY "0"
+    , px4 = toPadXY "4px"
+    , px8 = toPadXY "8px"
+    , px16 = toPadXY "16px"
     }
 
 
@@ -106,3 +221,35 @@ toBorder px color =
         , Css.borderColor color
         , Css.borderWidth (Css.px px)
         ]
+
+
+toPadding :
+    String
+    ->
+        { zero : Attribute msg
+        , px4 : Attribute msg
+        , px8 : Attribute msg
+        , px16 : Attribute msg
+        }
+toPadding propertyName =
+    { zero = Html.Styled.Attributes.css [ Css.property propertyName "0" ]
+    , px4 = Html.Styled.Attributes.css [ Css.property propertyName "4px" ]
+    , px8 = Html.Styled.Attributes.css [ Css.property propertyName "8px" ]
+    , px16 = Html.Styled.Attributes.css [ Css.property propertyName "16px" ]
+    }
+
+
+toPadXY :
+    String
+    ->
+        { zero : Attribute msg
+        , px4 : Attribute msg
+        , px8 : Attribute msg
+        , px16 : Attribute msg
+        }
+toPadXY xValue =
+    { zero = Html.Styled.Attributes.css [ Css.property "padding" ("0 " ++ xValue) ]
+    , px4 = Html.Styled.Attributes.css [ Css.property "padding" ("4px " ++ xValue) ]
+    , px8 = Html.Styled.Attributes.css [ Css.property "padding" ("8px " ++ xValue) ]
+    , px16 = Html.Styled.Attributes.css [ Css.property "padding" ("16px " ++ xValue) ]
+    }

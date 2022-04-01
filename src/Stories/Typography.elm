@@ -34,6 +34,6 @@ view _ =
         , Ui.Typography.p300 [] "Paragraph 300"
         , Ui.Typography.p200 [] "Paragraph 200"
         , Ui.Typography.p100 [] "Paragraph 100"
+        , Ui.Typography.codeMinimal [] "Code minimal"
         , Ui.Typography.code [] "Code example"
-        , Ui.Typography.codeMinimal [] "Code example"
         ]

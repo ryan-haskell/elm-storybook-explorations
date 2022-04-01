@@ -3,6 +3,11 @@
 
 ![Screenshot of Elm in Storybook](./docs/typography-screenshot.png)
 
+## Links
+
+- [Figma – Evergreen Design System](https://www.figma.com/file/LIKygr4sWxqFlAVHA3xCk1/Evergreen-v6-(Community)?node-id=2806%3A1732)
+- [Live Demo](https://evergreen-elm-storybook.netlify.app)
+
 ## Live demo
 
 Check out [elm-storybook.rhg.dev](https://elm-storybook.rhg.dev/) to see Elm and Storybook in action!

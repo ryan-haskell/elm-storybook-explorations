@@ -6,6 +6,7 @@ module Ui.Attr exposing
     , gap, align
     , pad, padXY
     , padTop, padLeft, padRight, padBottom
+    , elevation
     )
 
 {-|
@@ -18,6 +19,8 @@ module Ui.Attr exposing
 
 @docs pad, padXY
 @docs padTop, padLeft, padRight, padBottom
+
+@docs elevation
 
 -}
 
@@ -201,7 +204,71 @@ padXY =
 
 
 
+-- ELEVATION
+
+
+elevation :
+    { level1 : Attribute msg
+    , level2 : Attribute msg
+    , level3 : Attribute msg
+    }
+elevation =
+    { level1 =
+        toElevation
+            { x = 0
+            , y = 4
+            , blur = 8
+            , spread = 0
+            , rgb = ( 16, 24, 64 )
+            , alpha = 0.08
+            }
+    , level2 =
+        toElevation
+            { x = 0
+            , y = 4
+            , blur = 8
+            , spread = 0
+            , rgb = ( 16, 24, 64 )
+            , alpha = 0.16
+            }
+    , level3 =
+        toElevation
+            { x = 0
+            , y = 12
+            , blur = 40
+            , spread = 0
+            , rgb = ( 16, 24, 64 )
+            , alpha = 0.24
+            }
+    }
+
+
+
 -- INTERNALS
+
+
+toElevation :
+    { rgb : ( Int, Int, Int )
+    , x : Float
+    , y : Float
+    , blur : Float
+    , spread : Float
+    , alpha : Float
+    }
+    -> Html.Styled.Attribute msg
+toElevation options =
+    let
+        ( r, g, b ) =
+            options.rgb
+    in
+    Html.Styled.Attributes.css
+        [ Css.boxShadow5
+            (Css.px options.x)
+            (Css.px options.y)
+            (Css.px options.blur)
+            (Css.px options.spread)
+            (Css.rgba r g b options.alpha)
+        ]
 
 
 toGap : Int -> Attribute msg

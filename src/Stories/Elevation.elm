@@ -5,6 +5,7 @@ import Storybook.Controls
 import Ui
 import Ui.Attr
 import Ui.Palette exposing (..)
+import Ui.Typography
 
 
 main : Component () msg
@@ -21,23 +22,29 @@ main =
 
 view : () -> Ui.Html msg
 view _ =
-    Ui.row [ Ui.Attr.gap.px32 ]
-        [ viewSquare []
-        , viewSquare [ Ui.Attr.elevation.level1 ]
-        , viewSquare [ Ui.Attr.elevation.level2 ]
-        , viewSquare [ Ui.Attr.elevation.level3 ]
+    Ui.col [ Ui.Attr.gap.px16 ]
+        [ Ui.Typography.h800 [] "Elevation"
+        , Ui.row [ Ui.Attr.gap.px32 ]
+            [ viewSquare "No elevation" []
+            , viewSquare "Elevation 1" [ Ui.Attr.elevation.level1 ]
+            , viewSquare "Elevation 2" [ Ui.Attr.elevation.level2 ]
+            , viewSquare "Elevation 3" [ Ui.Attr.elevation.level3 ]
+            ]
         ]
 
 
-viewSquare : List (Ui.Attribute msg) -> Ui.Html msg
-viewSquare attrs =
+viewSquare : String -> List (Ui.Attribute msg) -> Ui.Html msg
+viewSquare label attrs =
     Ui.el
         (attrs
             ++ [ Ui.Attr.backgroundColor Ui.Palette.light
+               , Ui.Attr.fontColor Ui.Palette.n700
                , Ui.Attr.width.px80
                , Ui.Attr.height.px80
                , Ui.Attr.radius.px4
                , Ui.Attr.border.px1 Ui.Palette.n200
+               , Ui.Attr.align.center
+               , Ui.Attr.textAlign.center
                ]
         )
-        Ui.none
+        (Ui.text label)

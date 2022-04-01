@@ -7,6 +7,7 @@ module Ui.Attr exposing
     , pad, padXY
     , padTop, padLeft, padRight, padBottom
     , elevation
+    , textAlign
     )
 
 {-|
@@ -105,13 +106,23 @@ align :
     , right : Attribute msg
     }
 align =
-    { center = Html.Styled.Attributes.css [ Css.alignItems Css.center, Css.alignItems Css.center ]
+    { center =
+        Html.Styled.Attributes.css
+            [ Css.alignItems Css.center
+            , Css.justifyContent Css.center
+            ]
     , centerX = Html.Styled.Attributes.class "elm-align-center-x"
     , centerY = Html.Styled.Attributes.class "elm-align-center-y"
     , top = Html.Styled.Attributes.class "elm-align-top"
     , left = Html.Styled.Attributes.class "elm-align-left"
     , bottom = Html.Styled.Attributes.class "elm-align-bottom"
     , right = Html.Styled.Attributes.class "elm-align-right"
+    }
+
+
+textAlign : { center : Attribute msg }
+textAlign =
+    { center = Html.Styled.Attributes.css [ Css.textAlign Css.center ]
     }
 
 

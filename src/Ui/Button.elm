@@ -1,7 +1,7 @@
 module Ui.Button exposing
     ( view
     , Option
-    , primary, secondary, error
+    , primary, secondary, minimal, error
     , iconLeft, iconRight
     )
 
@@ -10,7 +10,7 @@ module Ui.Button exposing
 @docs view
 
 @docs Option
-@docs primary, secondary, error
+@docs primary, secondary, minimal, error
 @docs iconLeft, iconRight
 
 -}
@@ -89,6 +89,28 @@ view options label =
                         ]
                     ]
 
+                Minimal ->
+                    [ Ui.Attr.fontColor Ui.Palette.n700
+                    , Ui.Attr.backgroundColor Ui.Palette.light
+                    , Ui.Attr.whenDisabled
+                        [ Ui.Attr.fontColor Ui.Palette.n500
+                        , Ui.Attr.border.px1 Ui.Palette.n300
+                        ]
+                    , Ui.Attr.whenHovered
+                        [ Ui.Attr.fontColor Ui.Palette.n800
+                        , Ui.Attr.backgroundColor Ui.Palette.n100
+                        ]
+                    , Ui.Attr.whenPressed
+                        [ Ui.Attr.fontColor Ui.Palette.n800
+                        , Ui.Attr.backgroundColor Ui.Palette.n200
+                        ]
+                    , Ui.Attr.whenFocused
+                        [ Ui.Attr.fontColor Ui.Palette.n800
+                        , Ui.Attr.backgroundColor Ui.Palette.n50
+                        , Ui.Attr.outline.px2 Ui.Palette.b200
+                        ]
+                    ]
+
                 Error ->
                     [ Ui.Attr.fontColor Ui.Palette.light
                     , Ui.Attr.backgroundColor Ui.Palette.r400
@@ -114,6 +136,9 @@ view options label =
                     Ui.Palette.light
 
                 Secondary ->
+                    Ui.Palette.n600
+
+                Minimal ->
                     Ui.Palette.n600
 
                 Error ->
@@ -162,6 +187,7 @@ type Option msg
 type ButtonStyle
     = Primary
     | Secondary
+    | Minimal
     | Error
 
 
@@ -178,6 +204,11 @@ primary =
 secondary : Option msg
 secondary =
     WithStyle Secondary
+
+
+minimal : Option msg
+minimal =
+    WithStyle Minimal
 
 
 error : Option msg

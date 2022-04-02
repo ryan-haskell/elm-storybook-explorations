@@ -52,7 +52,7 @@ globalCss =
             , Css.lineHeight Css.inherit
             ]
         , Css.Global.body
-            [ Css.fontFamilies [ "Fira Sans", "sans-serif" ]
+            [ Css.fontFamilies [ "Inter", "sans-serif" ]
             , Css.lineHeight (Css.int 1)
             ]
 

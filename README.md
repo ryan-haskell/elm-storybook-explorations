@@ -5,7 +5,7 @@
 
 ## Links
 
-- [Figma – Evergreen Design System](https://www.figma.com/file/LIKygr4sWxqFlAVHA3xCk1/Evergreen-v6-(Community)?node-id=2806%3A1732)
+- [Figma – Evergreen Design System](https://www.figma.com/file/fAy5aIFDayh7AMlgMn6SXR/Evergreen)
 - [Live Demo](https://evergreen-elm-storybook.netlify.app)
 
 ## Live demo

@@ -289,7 +289,7 @@ toFontFamilies : Family -> List String
 toFontFamilies family =
     case family of
         SansSerif ->
-            [ "Fira Sans", "sans-serif" ]
+            [ "Inter", "sans-serif" ]
 
         Monospace ->
-            [ "Fira Mono", "monospace" ]
+            [ "Fira Code", "monospace" ]

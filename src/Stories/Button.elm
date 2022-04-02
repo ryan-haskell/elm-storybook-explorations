@@ -23,10 +23,11 @@ main =
 
 view : () -> Ui.Html msg
 view _ =
-    Ui.col [ Ui.Attr.gap.px40 ]
+    Ui.col [ Ui.Attr.gap.px16 ]
         [ Ui.row [ Ui.Attr.gap.px16 ]
             [ Ui.Button.view [] "Confirm"
             , Ui.Button.view [ Ui.Button.secondary ] "Cancel"
+            , Ui.Button.view [ Ui.Button.minimal ] "Close"
             , Ui.Button.view [ Ui.Button.error ] "Delete"
             ]
         , Ui.row [ Ui.Attr.gap.px16 ]
@@ -38,6 +39,11 @@ view _ =
                 , Ui.Button.iconLeft Ui.Icon.arrowLeft
                 ]
                 "Back"
+            , Ui.Button.view
+                [ Ui.Button.minimal
+                , Ui.Button.iconLeft Ui.Icon.sort
+                ]
+                "Sort"
             , Ui.Button.view
                 [ Ui.Button.error
                 , Ui.Button.iconLeft Ui.Icon.trash
@@ -53,6 +59,11 @@ view _ =
                 , Ui.Button.iconRight Ui.Icon.caretDown
                 ]
                 "Pick a color"
+            , Ui.Button.view
+                [ Ui.Button.minimal
+                , Ui.Button.iconRight Ui.Icon.infoSign
+                ]
+                "Learn more"
             , Ui.Button.view
                 [ Ui.Button.error
                 , Ui.Button.iconRight Ui.Icon.caretDown

@@ -1,5 +1,5 @@
 module Ui.Button exposing
-    ( view
+    ( view, viewIconOnly
     , Option
     , primary, secondary, minimal, error
     , iconLeft, iconRight
@@ -7,7 +7,7 @@ module Ui.Button exposing
 
 {-|
 
-@docs view
+@docs view, viewIconOnly
 
 @docs Option
 @docs primary, secondary, minimal, error
@@ -23,16 +23,31 @@ import Ui.Transition
 import Ui.Typography
 
 
+type Content
+    = Label String
+    | IconOnly Ui.Icon.Icon
+
+
 view : List (Option msg) -> String -> Ui.Html msg
 view options label =
+    viewWith options (Label label)
+
+
+viewIconOnly : List (Option msg) -> Ui.Icon.Icon -> Ui.Html msg
+viewIconOnly options icon =
+    viewWith options (IconOnly icon)
+
+
+viewWith : List (Option msg) -> Content -> Ui.Html msg
+viewWith options content =
     let
         settings : Settings
         settings =
             fromOptionsToSettings options
 
-        commonAttrs : List (Ui.Attribute msg)
-        commonAttrs =
-            [ Ui.Attr.padXY.px16.px8
+        commonAttributes : List (Ui.Attribute msg)
+        commonAttributes =
+            [ Ui.Attr.ref.button
             , Ui.Attr.wrap.none
             , Ui.Attr.radius.px4
             , Ui.Attr.cursor.pointer
@@ -44,8 +59,21 @@ view options label =
                 ]
             ]
 
-        styleAttrs : List (Ui.Attribute msg)
-        styleAttrs =
+        contentAttributes : List (Ui.Attribute msg)
+        contentAttributes =
+            case content of
+                Label _ ->
+                    [ Ui.Attr.padXY.px16.px8
+                    ]
+
+                IconOnly _ ->
+                    [ Ui.Attr.width.px32
+                    , Ui.Attr.height.px32
+                    , Ui.Attr.align.center
+                    ]
+
+        buttonStyleAttributes : List (Ui.Attribute msg)
+        buttonStyleAttributes =
             case settings.style of
                 Primary ->
                     [ Ui.Attr.fontColor Ui.Palette.light
@@ -144,35 +172,50 @@ view options label =
                 Error ->
                     Ui.Palette.light
 
-        viewLabel : Ui.Html msg
-        viewLabel =
-            Ui.Typography.p200 [ Ui.Attr.inherit.fontColor ] label
+        viewLabel : String -> Ui.Html msg
+        viewLabel label =
+            Ui.Typography.p200
+                [ Ui.Attr.inherit.fontColor
+                , Ui.Attr.transition.ms100 [ Ui.Transition.fontColor ]
+                ]
+                label
 
         viewIcon : Ui.Icon.Icon -> Ui.Html msg
         viewIcon icon =
-            Ui.el [ Ui.Attr.fontColor iconColor ] (Ui.icon icon)
+            Ui.el
+                [ Ui.Attr.fontColor iconColor
 
-        content : Ui.Html msg
-        content =
-            case settings.icon of
-                Just (Left icon) ->
+                -- This "ref" makes it so "secondary" and "minimal" icons
+                -- change when the ref.button is hovered/pressed/focused
+                , Ui.Attr.ref.icon
+                , Ui.Attr.transition.ms100 [ Ui.Transition.fontColor ]
+                ]
+                (Ui.icon.px12 icon)
+
+        viewButtonContent : Ui.Html msg
+        viewButtonContent =
+            case ( content, settings.icon ) of
+                ( Label label, Just (Left icon) ) ->
                     Ui.row [ Ui.Attr.gap.px8, Ui.Attr.align.center ]
                         [ viewIcon icon
-                        , viewLabel
+                        , viewLabel label
                         ]
 
-                Just (Right icon) ->
+                ( Label label, Just (Right icon) ) ->
                     Ui.row [ Ui.Attr.gap.px8, Ui.Attr.align.center ]
-                        [ viewLabel
+                        [ viewLabel label
                         , viewIcon icon
                         ]
 
-                Nothing ->
-                    viewLabel
+                ( Label label, Nothing ) ->
+                    viewLabel label
+
+                ( IconOnly icon, _ ) ->
+                    viewIcon icon
     in
     Ui.clickable
-        (commonAttrs ++ styleAttrs)
-        content
+        (commonAttributes ++ contentAttributes ++ buttonStyleAttributes)
+        viewButtonContent
 
 
 

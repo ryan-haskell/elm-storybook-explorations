@@ -70,4 +70,10 @@ view _ =
                 ]
                 "Delete"
             ]
+        , Ui.row [ Ui.Attr.gap.px16 ]
+            [ Ui.Button.viewIconOnly [] Ui.Icon.arrowRight
+            , Ui.Button.viewIconOnly [ Ui.Button.secondary ] Ui.Icon.more
+            , Ui.Button.viewIconOnly [ Ui.Button.minimal ] Ui.Icon.infoSign
+            , Ui.Button.viewIconOnly [ Ui.Button.error ] Ui.Icon.trash
+            ]
         ]

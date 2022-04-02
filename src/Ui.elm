@@ -56,7 +56,7 @@ globalCss =
             , Css.lineHeight (Css.int 1)
             ]
 
-        -- col flex alignment
+        -- Ui.col flex align properties
         , Css.Global.selector ".elm-col.elm-align-left" [ Css.alignItems Css.flexStart ]
         , Css.Global.selector ".elm-col.elm-align-right" [ Css.alignItems Css.flexEnd ]
         , Css.Global.selector ".elm-col.elm-align-top" [ Css.justifyContent Css.flexStart ]
@@ -64,13 +64,25 @@ globalCss =
         , Css.Global.selector ".elm-col.elm-align-center-x" [ Css.alignItems Css.center ]
         , Css.Global.selector ".elm-col.elm-align-center-y" [ Css.justifyContent Css.center ]
 
-        -- row flex alignment
+        -- Ui.row flex align properties
         , Css.Global.selector ".elm-row.elm-align-left" [ Css.justifyContent Css.flexStart ]
         , Css.Global.selector ".elm-row.elm-align-right" [ Css.justifyContent Css.flexEnd ]
         , Css.Global.selector ".elm-row.elm-align-top" [ Css.alignItems Css.flexStart ]
         , Css.Global.selector ".elm-row.elm-align-bottom" [ Css.alignItems Css.flexEnd ]
         , Css.Global.selector ".elm-row.elm-align-center-x" [ Css.justifyContent Css.center ]
         , Css.Global.selector ".elm-row.elm-align-center-y" [ Css.alignItems Css.center ]
+
+        -- Refs allow for design edge cases where using normal CSS would be easier.
+        -- I am very afraid of these being abused, so please add refs with caution!
+        -- There is likely a nicer solution here, but I haven't come up with a
+        -- clear API that would support edge cases like these yet...
+        --
+        -- ( All refs must be captured in one place: `Ui.Attr.ref` )
+        --
+        -- EDGE CASE 1: Changing an icon's color when a button is hovered/pressed/focused.
+        , Css.Global.selector "[ref=button]:hover [ref=icon]" [ Css.color Css.inherit ]
+        , Css.Global.selector "[ref=button]:active [ref=icon]" [ Css.color Css.inherit ]
+        , Css.Global.selector "[ref=button]:focus [ref=icon]" [ Css.color Css.inherit ]
         ]
 
 
@@ -93,9 +105,10 @@ text str =
     Html.Styled.span [] [ Html.Styled.text str ]
 
 
-icon : Ui.Icon.Icon -> Html msg
-icon icon_ =
-    Html.Styled.span [ Html.Styled.Attributes.class (Ui.Icon.toClassName icon_) ] []
+icon : { px12 : Ui.Icon.Icon -> Html msg }
+icon =
+    { px12 = toIcon 12
+    }
 
 
 
@@ -160,3 +173,12 @@ colStyles =
     [ Css.displayFlex
     , Css.flexDirection Css.column
     ]
+
+
+toIcon : Float -> Ui.Icon.Icon -> Html.Styled.Html msg
+toIcon size icon_ =
+    Html.Styled.span
+        [ Html.Styled.Attributes.class (Ui.Icon.toClassName icon_)
+        , Html.Styled.Attributes.css [ Css.fontSize (Css.px size) ]
+        ]
+        []

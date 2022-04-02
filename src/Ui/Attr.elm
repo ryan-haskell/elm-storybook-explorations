@@ -12,7 +12,7 @@ module Ui.Attr exposing
     , transition
     , whenHovered, whenDisabled, whenFocused, whenPressed
     , cursor, outline
-    , inherit, wrap
+    , inherit, wrap, ref
     )
 
 {-|
@@ -38,7 +38,7 @@ module Ui.Attr exposing
 @docs whenHovered, whenDisabled, whenFocused, whenPressed
 @docs cursor, outline
 
-@docs inherit, wrap
+@docs inherit, wrap, ref
 
 -}
 
@@ -52,6 +52,7 @@ import Ui.Transition
 type Attribute msg
     = Styles (List Css.Style)
     | Class String
+    | Ref String
     | Batch (List (Attribute msg))
 
 
@@ -63,6 +64,9 @@ toAttributes attr =
 
         Class name ->
             [ Html.Styled.Attributes.class name ]
+
+        Ref name ->
+            [ Html.Styled.Attributes.attribute "ref" name ]
 
         Batch items ->
             List.concatMap toAttributes items
@@ -105,18 +109,22 @@ backgroundColor color =
 
 
 width :
-    { px80 : Attribute msg
+    { px32 : Attribute msg
+    , px80 : Attribute msg
     }
 width =
-    { px80 = fromPixels Css.width 80
+    { px32 = fromPixels Css.width 32
+    , px80 = fromPixels Css.width 80
     }
 
 
 height :
-    { px80 : Attribute msg
+    { px32 : Attribute msg
+    , px80 : Attribute msg
     }
 height =
-    { px80 = fromPixels Css.height 80
+    { px32 = fromPixels Css.height 32
+    , px80 = fromPixels Css.height 80
     }
 
 
@@ -271,6 +279,23 @@ whenPressed attrs =
 
 
 
+-- REFS
+
+
+ref :
+    { button : Attribute msg
+    , icon : Attribute msg
+    }
+ref =
+    { button = Ref "button"
+    , icon = Ref "icon"
+    }
+
+
+
+-- whenHoveredProvideRef : String -> List (Attribute msg) -> Attribute msg
+-- whenHoveredProvideRef str attrs =
+--     Class "hover:ref"
 -- PADDING
 
 
@@ -519,6 +544,9 @@ keepOnlyCssStyles attrs =
                     cssList
 
                 Class _ ->
+                    []
+
+                Ref _ ->
                     []
 
                 Batch items ->

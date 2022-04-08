@@ -25,13 +25,13 @@ view _ =
         [ Ui.Attr.align.left
         , Ui.Attr.gap.px16
         ]
-        [ Ui.Pill.neutral "69"
-        , Ui.Pill.blue "69"
-        , Ui.Pill.green "69"
-        , Ui.Pill.yellow "69"
-        , Ui.Pill.red "69"
-        , Ui.Pill.violet "69"
-        , Ui.Pill.teal "69"
-        , Ui.Pill.pink "69"
-        , Ui.Pill.orange "69"
+        [ Ui.Pill.view (Ui.Pill.neutral "69")
+        , Ui.Pill.view (Ui.Pill.blue "69")
+        , Ui.Pill.view (Ui.Pill.green "69")
+        , Ui.Pill.view (Ui.Pill.yellow "69")
+        , Ui.Pill.view (Ui.Pill.red "69")
+        , Ui.Pill.view (Ui.Pill.violet "69")
+        , Ui.Pill.view (Ui.Pill.teal "69")
+        , Ui.Pill.view (Ui.Pill.pink "69")
+        , Ui.Pill.view (Ui.Pill.orange "69")
         ]

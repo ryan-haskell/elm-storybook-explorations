@@ -3,13 +3,14 @@ module Stories.Card exposing (main)
 import Storybook.Component exposing (Component)
 import Storybook.Controls
 import Ui
+import Ui.Action
 import Ui.Attr
 import Ui.Card
 import Ui.Palette exposing (..)
 import Ui.Typography
 
 
-main : Component () msg
+main : Component () Msg
 main =
     Storybook.Component.stateless
         { controls = Storybook.Controls.none
@@ -21,12 +22,18 @@ main =
 -- VIEW
 
 
-view : () -> Ui.Html msg
+type Msg
+    = UserClickedCard
+
+
+view : () -> Ui.Html Msg
 view _ =
     Ui.col [ Ui.Attr.gap.px40 ]
         [ Ui.col [ Ui.Attr.gap.px16, Ui.Attr.align.left ]
             [ Ui.Typography.h900 [] "Card"
-            , Ui.Card.view [] Ui.none
+            , Ui.Card.view []
+                (Ui.Action.fromMsg UserClickedCard)
+                Ui.none
             ]
         , Ui.col [ Ui.Attr.gap.px16 ]
             [ Ui.Typography.h800 [] "All interaction states"
@@ -42,19 +49,19 @@ type alias Example msg =
     }
 
 
-examples : List (Example msg)
+examples : List (Example Msg)
 examples =
     [ { label = "Enabled"
-      , view = Ui.Card.view [ Ui.Card.alwaysEnabled ] Ui.none
+      , view = Ui.Card.view [ Ui.Card.alwaysEnabled ] (Ui.Action.fromMsg UserClickedCard) Ui.none
       }
     , { label = "Focused"
-      , view = Ui.Card.view [ Ui.Card.alwaysFocused ] Ui.none
+      , view = Ui.Card.view [ Ui.Card.alwaysFocused ] (Ui.Action.fromMsg UserClickedCard) Ui.none
       }
     , { label = "Hovered"
-      , view = Ui.Card.view [ Ui.Card.alwaysHovered ] Ui.none
+      , view = Ui.Card.view [ Ui.Card.alwaysHovered ] (Ui.Action.fromMsg UserClickedCard) Ui.none
       }
     , { label = "Disabled"
-      , view = Ui.Card.view [ Ui.Card.alwaysDisabled ] Ui.none
+      , view = Ui.Card.view [ Ui.Card.alwaysDisabled ] (Ui.Action.fromMsg UserClickedCard) Ui.none
       }
     ]
 

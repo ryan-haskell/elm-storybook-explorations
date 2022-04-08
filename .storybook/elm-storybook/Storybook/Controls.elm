@@ -1,13 +1,13 @@
 module Storybook.Controls exposing
     ( Decoder, new, none
-    , withString, withInt, withEnum
+    , withString, withInt, withBool, withEnum
     , decode
     )
 
 {-|
 
 @docs Decoder, new, none
-@docs withString, withInt, withEnum
+@docs withString, withInt, withBool, withEnum
 @docs decode
 
 -}
@@ -98,6 +98,24 @@ withInt options =
             { decoder =
                 Json.oneOf
                     [ Json.field options.name Json.int
+                    , Json.succeed options.fallback
+                    ]
+            , fallback = options.fallback
+            }
+
+
+withBool :
+    { name : String
+    , fallback : Bool
+    }
+    -> Decoder (Bool -> output)
+    -> Decoder output
+withBool options =
+    with <|
+        Decoder
+            { decoder =
+                Json.oneOf
+                    [ Json.field options.name Json.bool
                     , Json.succeed options.fallback
                     ]
             , fallback = options.fallback

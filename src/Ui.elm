@@ -21,6 +21,7 @@ import Css.Global
 import Html
 import Html.Styled
 import Html.Styled.Attributes
+import Ui.Action
 import Ui.Attr
 import Ui.Icon
 
@@ -50,6 +51,7 @@ globalCss =
             , Css.borderStyle Css.none
             , Css.property "font" "inherit"
             , Css.lineHeight Css.inherit
+            , Css.color Css.inherit
             ]
         , Css.Global.body
             [ Css.fontFamilies [ "Inter", "sans-serif" ]
@@ -144,9 +146,9 @@ el attrs child =
     row attrs [ child ]
 
 
-clickable : List (Attribute msg) -> Html msg -> Html msg
-clickable attrs child =
-    createNode Html.Styled.button
+clickable : Ui.Action.Action msg -> List (Attribute msg) -> Html msg -> Html msg
+clickable action attrs child =
+    createNode (Ui.Action.toHtmlNode action)
         (Html.Styled.Attributes.class "elm-row"
             :: Html.Styled.Attributes.css rowStyles
             :: List.concatMap Ui.Attr.toAttributes attrs

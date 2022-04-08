@@ -18,6 +18,7 @@ module Ui.Card exposing
 -}
 
 import Ui
+import Ui.Action
 import Ui.Attr
 import Ui.Palette
 import Ui.Transition
@@ -58,8 +59,8 @@ alwaysFocused =
 -- VIEW A CARD
 
 
-view : List (Option msg) -> Ui.Html msg -> Ui.Html msg
-view options content =
+view : List (Option msg) -> Ui.Action.Action msg -> Ui.Html msg -> Ui.Html msg
+view options onClick content =
     let
         enabledAttributes : List (Ui.Attribute msg)
         enabledAttributes =
@@ -103,7 +104,7 @@ view options content =
         settings =
             fromOptionsToSettings options
     in
-    Ui.clickable
+    Ui.clickable onClick
         [ Ui.Attr.cursor.pointer
         , Ui.Attr.pad.px40
         , Ui.Attr.radius.px8

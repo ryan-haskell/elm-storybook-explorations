@@ -16,6 +16,7 @@ module Ui.Button exposing
 -}
 
 import Ui
+import Ui.Action
 import Ui.Attr
 import Ui.Icon
 import Ui.Palette
@@ -23,12 +24,12 @@ import Ui.Transition
 import Ui.Typography
 
 
-view : List (Option msg) -> String -> Ui.Html msg
+view : List (Option msg) -> { label : String, onClick : msg } -> Ui.Html msg
 view options label =
     viewWith options (Label label)
 
 
-viewIconOnly : List (Option msg) -> Ui.Icon.Icon -> Ui.Html msg
+viewIconOnly : List (Option msg) -> { icon : Ui.Icon.Icon, onClick : msg } -> Ui.Html msg
 viewIconOnly options icon =
     viewWith options (IconOnly icon)
 
@@ -37,12 +38,12 @@ viewIconOnly options icon =
 -- COMMON VIEW HELPER
 
 
-type Content
-    = Label String
-    | IconOnly Ui.Icon.Icon
+type Content msg
+    = Label { label : String, onClick : msg }
+    | IconOnly { icon : Ui.Icon.Icon, onClick : msg }
 
 
-viewWith : List (Option msg) -> Content -> Ui.Html msg
+viewWith : List (Option msg) -> Content msg -> Ui.Html msg
 viewWith options content =
     let
         settings : Settings
@@ -196,28 +197,37 @@ viewWith options content =
                 ]
                 (Ui.icon.px12 icon)
 
+        onClick : msg
+        onClick =
+            case content of
+                Label record ->
+                    record.onClick
+
+                IconOnly record ->
+                    record.onClick
+
         viewButtonContent : Ui.Html msg
         viewButtonContent =
             case ( content, settings.icon ) of
-                ( Label label, Just (Left icon) ) ->
+                ( Label { label }, Just (Left icon) ) ->
                     Ui.row [ Ui.Attr.gap.px8, Ui.Attr.align.center ]
                         [ viewIcon icon
                         , viewLabel label
                         ]
 
-                ( Label label, Just (Right icon) ) ->
+                ( Label { label }, Just (Right icon) ) ->
                     Ui.row [ Ui.Attr.gap.px8, Ui.Attr.align.center ]
                         [ viewLabel label
                         , viewIcon icon
                         ]
 
-                ( Label label, Nothing ) ->
+                ( Label { label }, Nothing ) ->
                     viewLabel label
 
-                ( IconOnly icon, _ ) ->
+                ( IconOnly { icon }, _ ) ->
                     viewIcon icon
     in
-    Ui.clickable
+    Ui.clickable (Ui.Action.fromMsg onClick)
         (commonAttributes ++ contentAttributes ++ buttonStyleAttributes)
         viewButtonContent
 

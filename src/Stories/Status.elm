@@ -25,11 +25,11 @@ view _ =
         [ Ui.Attr.align.left
         , Ui.Attr.gap.px16
         ]
-        [ Ui.Status.neutral "Disabled"
-        , Ui.Status.green "Enabled"
-        , Ui.Status.blue "Info"
-        , Ui.Status.yellow "Warning"
-        , Ui.Status.red "No Data"
-        , Ui.Status.cross "Label"
-        , Ui.Status.tick "Label"
+        [ Ui.Status.view (Ui.Status.neutral "Disabled")
+        , Ui.Status.view (Ui.Status.green "Enabled")
+        , Ui.Status.view (Ui.Status.blue "Info")
+        , Ui.Status.view (Ui.Status.yellow "Warning")
+        , Ui.Status.view (Ui.Status.red "No Data")
+        , Ui.Status.view (Ui.Status.cross "Label")
+        , Ui.Status.view (Ui.Status.tick "Label")
         ]

@@ -1,6 +1,6 @@
 module Ui.Attr exposing
     ( Attribute, toAttributes
-    , none, list
+    , none, list, map
     , typography, textAlign
     , fontColor, backgroundColor
     , border, radius
@@ -13,12 +13,13 @@ module Ui.Attr exposing
     , whenHovered, whenDisabled, whenFocused, whenPressed
     , cursor, outline
     , inherit, wrap, ref
+    , isDisabled
     )
 
 {-|
 
 @docs Attribute, toAttributes
-@docs none, list
+@docs none, list, map
 @docs typography, textAlign
 @docs fontColor, backgroundColor
 @docs border, radius
@@ -53,6 +54,7 @@ type Attribute msg
     = Styles (List Css.Style)
     | Class String
     | Ref String
+    | IsDisabled Bool
     | Batch (List (Attribute msg))
 
 
@@ -67,6 +69,9 @@ toAttributes attr =
 
         Ref name ->
             [ Html.Styled.Attributes.attribute "ref" name ]
+
+        IsDisabled bool ->
+            [ Html.Styled.Attributes.disabled bool ]
 
         Batch items ->
             List.concatMap toAttributes items
@@ -86,6 +91,34 @@ list attrs =
     Batch attrs
 
 
+map : (msg1 -> msg2) -> Attribute msg1 -> Attribute msg2
+map fn attr =
+    case attr of
+        Styles s ->
+            Styles s
+
+        Class s ->
+            Class s
+
+        Ref s ->
+            Ref s
+
+        IsDisabled b ->
+            IsDisabled b
+
+        Batch attrs ->
+            Batch (List.map (map fn) attrs)
+
+
+isDisabled : Bool -> Attribute msg
+isDisabled =
+    IsDisabled
+
+
+
+-- STYLES
+
+
 fontColor : Ui.Palette.Color -> Attribute msg
 fontColor color =
     Styles [ Css.important (Css.color color) ]
@@ -93,7 +126,7 @@ fontColor color =
 
 inherit : { fontColor : Attribute msg }
 inherit =
-    { fontColor = Styles [ Css.color Css.inherit ]
+    { fontColor = Styles [ Css.important (Css.color Css.inherit) ]
     }
 
 
@@ -139,10 +172,14 @@ border =
 radius :
     { px4 : Attribute msg
     , px8 : Attribute msg
+    , left : { px4 : Attribute msg }
+    , right : { px4 : Attribute msg }
     }
 radius =
     { px4 = fromPixels Css.borderRadius 4
     , px8 = fromPixels Css.borderRadius 8
+    , left = { px4 = toBorderRadiusLeft 4 }
+    , right = { px4 = toBorderRadiusRight 4 }
     }
 
 
@@ -247,11 +284,6 @@ whenHovered attrs =
     Styles [ Css.hover (keepOnlyCssStyles attrs) ]
 
 
-whenDisabled : List (Attribute msg) -> Attribute msg
-whenDisabled attrs =
-    Styles [ Css.disabled (keepOnlyCssStyles attrs) ]
-
-
 whenFocused : List (Attribute msg) -> Attribute msg
 whenFocused attrs =
     let
@@ -277,6 +309,23 @@ whenPressed attrs =
         , Css.hover [ Css.active styles ]
         , Css.focus [ Css.active styles ]
         , Css.hover [ Css.focus [ Css.active styles ] ]
+        ]
+
+
+whenDisabled : List (Attribute msg) -> Attribute msg
+whenDisabled attrs =
+    let
+        styles =
+            keepOnlyCssStyles attrs
+    in
+    Styles
+        [ Css.disabled styles
+        , Css.disabled [ Css.hover styles ]
+        , Css.disabled [ Css.focus styles ]
+        , Css.disabled [ Css.active styles ]
+        , Css.disabled [ Css.hover [ Css.active styles ] ]
+        , Css.disabled [ Css.focus [ Css.active styles ] ]
+        , Css.disabled [ Css.hover [ Css.focus [ Css.active styles ] ] ]
         ]
 
 
@@ -489,6 +538,22 @@ toBorder px color =
         ]
 
 
+toBorderRadiusLeft : Float -> Attribute msg
+toBorderRadiusLeft px =
+    Styles
+        [ Css.borderTopLeftRadius (Css.px px)
+        , Css.borderBottomLeftRadius (Css.px px)
+        ]
+
+
+toBorderRadiusRight : Float -> Attribute msg
+toBorderRadiusRight px =
+    Styles
+        [ Css.borderTopRightRadius (Css.px px)
+        , Css.borderBottomRightRadius (Css.px px)
+        ]
+
+
 toPadding :
     String
     ->
@@ -549,6 +614,9 @@ keepOnlyCssStyles attrs =
                     []
 
                 Ref _ ->
+                    []
+
+                IsDisabled _ ->
                     []
 
                 Batch items ->

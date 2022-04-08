@@ -9,7 +9,7 @@ import Ui.Icon
 import Ui.Palette exposing (..)
 
 
-main : Component () msg
+main : Component () Msg
 main =
     Storybook.Component.stateless
         { controls = Storybook.Controls.none
@@ -21,59 +21,103 @@ main =
 -- VIEW
 
 
-view : () -> Ui.Html msg
+type Msg
+    = UserClickedButton
+
+
+view : () -> Ui.Html Msg
 view _ =
     Ui.col [ Ui.Attr.gap.px16 ]
         [ Ui.row [ Ui.Attr.gap.px16 ]
-            [ Ui.Button.view [] "Confirm"
-            , Ui.Button.view [ Ui.Button.secondary ] "Cancel"
-            , Ui.Button.view [ Ui.Button.minimal ] "Close"
-            , Ui.Button.view [ Ui.Button.error ] "Delete"
+            [ Ui.Button.view []
+                { label = "Confirm"
+                , onClick = UserClickedButton
+                }
+            , Ui.Button.view [ Ui.Button.secondary ]
+                { label = "Cancel"
+                , onClick = UserClickedButton
+                }
+            , Ui.Button.view [ Ui.Button.minimal ]
+                { label = "Close"
+                , onClick = UserClickedButton
+                }
+            , Ui.Button.view [ Ui.Button.error ]
+                { label = "Delete"
+                , onClick = UserClickedButton
+                }
             ]
         , Ui.row [ Ui.Attr.gap.px16 ]
             [ Ui.Button.view
                 [ Ui.Button.iconLeft Ui.Icon.search ]
-                "Search"
+                { label = "Search"
+                , onClick = UserClickedButton
+                }
             , Ui.Button.view
                 [ Ui.Button.secondary
                 , Ui.Button.iconLeft Ui.Icon.arrowLeft
                 ]
-                "Back"
+                { label = "Back"
+                , onClick = UserClickedButton
+                }
             , Ui.Button.view
                 [ Ui.Button.minimal
                 , Ui.Button.iconLeft Ui.Icon.sort
                 ]
-                "Sort"
+                { label = "Sort"
+                , onClick = UserClickedButton
+                }
             , Ui.Button.view
                 [ Ui.Button.error
                 , Ui.Button.iconLeft Ui.Icon.trash
                 ]
-                "Delete"
+                { label = "Delete"
+                , onClick = UserClickedButton
+                }
             ]
         , Ui.row [ Ui.Attr.gap.px16 ]
             [ Ui.Button.view
                 [ Ui.Button.iconRight Ui.Icon.arrowRight ]
-                "Continue"
+                { label = "Continue"
+                , onClick = UserClickedButton
+                }
             , Ui.Button.view
                 [ Ui.Button.secondary
                 , Ui.Button.iconRight Ui.Icon.caretDown
                 ]
-                "Pick a color"
+                { label = "Pick a color"
+                , onClick = UserClickedButton
+                }
             , Ui.Button.view
                 [ Ui.Button.minimal
                 , Ui.Button.iconRight Ui.Icon.infoSign
                 ]
-                "Learn more"
+                { label = "Learn more"
+                , onClick = UserClickedButton
+                }
             , Ui.Button.view
                 [ Ui.Button.error
                 , Ui.Button.iconRight Ui.Icon.caretDown
                 ]
-                "Delete"
+                { label = "Delete"
+                , onClick = UserClickedButton
+                }
             ]
         , Ui.row [ Ui.Attr.gap.px16 ]
-            [ Ui.Button.viewIconOnly [] Ui.Icon.arrowRight
-            , Ui.Button.viewIconOnly [ Ui.Button.secondary ] Ui.Icon.more
-            , Ui.Button.viewIconOnly [ Ui.Button.minimal ] Ui.Icon.infoSign
-            , Ui.Button.viewIconOnly [ Ui.Button.error ] Ui.Icon.trash
+            [ Ui.Button.viewIconOnly []
+                { icon = Ui.Icon.arrowRight
+                , onClick = UserClickedButton
+                }
+            , Ui.Button.viewIconOnly [ Ui.Button.secondary ]
+                { icon = Ui.Icon.more
+                , onClick = UserClickedButton
+                }
+            , Ui.Button.viewIconOnly [ Ui.Button.minimal ]
+                { icon = Ui.Icon.infoSign
+                , onClick = UserClickedButton
+                }
+            , Ui.Button.viewIconOnly [ Ui.Button.error ]
+                { icon = Ui.Icon.trash
+                , onClick = UserClickedButton
+                }
             ]
         ]

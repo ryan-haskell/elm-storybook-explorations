@@ -23,11 +23,6 @@ import Ui.Transition
 import Ui.Typography
 
 
-type Content
-    = Label String
-    | IconOnly Ui.Icon.Icon
-
-
 view : List (Option msg) -> String -> Ui.Html msg
 view options label =
     viewWith options (Label label)
@@ -36,6 +31,15 @@ view options label =
 viewIconOnly : List (Option msg) -> Ui.Icon.Icon -> Ui.Html msg
 viewIconOnly options icon =
     viewWith options (IconOnly icon)
+
+
+
+-- COMMON VIEW HELPER
+
+
+type Content
+    = Label String
+    | IconOnly Ui.Icon.Icon
 
 
 viewWith : List (Option msg) -> Content -> Ui.Html msg
@@ -288,14 +292,14 @@ defaultSettings =
 
 fromOptionsToSettings : List (Option msg) -> Settings
 fromOptionsToSettings options =
-    List.foldl
-        (\option settings ->
-            case option of
-                WithStyle style ->
-                    { settings | style = style }
+    List.foldl updateSettings defaultSettings options
 
-                WithIcon iconInfo ->
-                    { settings | icon = Just iconInfo }
-        )
-        defaultSettings
-        options
+
+updateSettings : Option msg -> Settings -> Settings
+updateSettings option settings =
+    case option of
+        WithStyle style ->
+            { settings | style = style }
+
+        WithIcon iconInfo ->
+            { settings | icon = Just iconInfo }

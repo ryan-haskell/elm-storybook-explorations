@@ -1,12 +1,12 @@
 module Ui.Typography exposing
-    ( h900, h800, h700, h600, h500, h400, h300, h200, h100
+    ( h900, h800, h700, h600, h500, h400, h300, h200, h150, h100
     , p300, p200, p100
     , code, codeMinimal
     )
 
 {-|
 
-@docs h900, h800, h700, h600, h500, h400, h300, h200, h100
+@docs h900, h800, h700, h600, h500, h400, h300, h200, h150, h100
 @docs p300, p200, p100
 
 @docs code, codeMinimal
@@ -114,6 +114,21 @@ h200 attributes str =
     viewTypography
         { color = Ui.Palette.n800
         , fontSize = 12
+        , lineHeight = 16
+        , weight = Semibold
+        , family = SansSerif
+        , attributes = attributes
+        , text = String.toUpper str
+        }
+
+
+{-| Note: Used by Ui.Pill component, not specified in Typography
+-}
+h150 : List (Ui.Attribute msg) -> String -> Ui.Html msg
+h150 attributes str =
+    viewTypography
+        { color = Ui.Palette.n800
+        , fontSize = 11
         , lineHeight = 16
         , weight = Semibold
         , family = SansSerif
@@ -236,17 +251,14 @@ viewTypography :
     -> Ui.Html msg
 viewTypography options =
     Ui.el
-        ([ Ui.Attr.fontColor options.color
-         , toUiTypographyAttr options
-         ]
-            ++ options.attributes
-        )
+        (toUiTypographyAttr options :: options.attributes)
         (Ui.text options.text)
 
 
 toUiTypographyAttr :
     { options
-        | fontSize : Float
+        | color : Ui.Palette.Color
+        , fontSize : Float
         , lineHeight : Float
         , weight : Weight
         , family : Family
@@ -254,7 +266,8 @@ toUiTypographyAttr :
     -> Ui.Attribute msg
 toUiTypographyAttr options =
     Ui.Attr.typography
-        { fontSize = options.fontSize
+        { color = options.color
+        , fontSize = options.fontSize
         , lineHeight = options.lineHeight
         , weight = fromFontWeightToInt options.weight
         , families = toFontFamilies options.family

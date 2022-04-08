@@ -88,7 +88,7 @@ list attrs =
 
 fontColor : Ui.Palette.Color -> Attribute msg
 fontColor color =
-    Styles [ Css.color color ]
+    Styles [ Css.important (Css.color color) ]
 
 
 inherit : { fontColor : Attribute msg }
@@ -196,6 +196,7 @@ textAlign =
 
 typography :
     { fontSize : Float
+    , color : Ui.Palette.Color
     , lineHeight : Float
     , weight : Int
     , families : List String
@@ -204,6 +205,7 @@ typography :
 typography options =
     Styles
         [ Css.fontSize (Css.px options.fontSize)
+        , Css.color options.color
         , Css.lineHeight (Css.px options.lineHeight)
         , Css.fontWeight (Css.int options.weight)
         , Css.fontFamilies options.families

@@ -1,6 +1,6 @@
 module Ui.Icon exposing
     ( Icon, toClassName
-    , arrowLeft, arrowRight, caretDown, infoSign, more, search, sort, trash
+    , arrowLeft, arrowRight, caretDown, cross, dot, infoSign, more, search, sort, tick, trash
     )
 
 {-| More icons available here:
@@ -62,3 +62,18 @@ infoSign =
 sort : Icon
 sort =
     Icon "sort"
+
+
+dot : Icon
+dot =
+    Icon "dot"
+
+
+cross : Icon
+cross =
+    Icon "cross"
+
+
+tick : Icon
+tick =
+    Icon "tick"

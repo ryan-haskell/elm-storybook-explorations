@@ -105,9 +105,13 @@ text str =
     Html.Styled.span [] [ Html.Styled.text str ]
 
 
-icon : { px12 : Ui.Icon.Icon -> Html msg }
+icon :
+    { px12 : Ui.Icon.Icon -> Html msg
+    , px16 : Ui.Icon.Icon -> Html msg
+    }
 icon =
     { px12 = toIcon 12
+    , px16 = toIcon 16
     }
 
 

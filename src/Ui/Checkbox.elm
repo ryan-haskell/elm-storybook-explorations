@@ -22,10 +22,21 @@ view :
     }
     -> Ui.Html msg
 view options =
-    Ui.row [ Ui.Attr.align.center, Ui.Attr.gap.px12 ]
-        [ viewCheckboxIcon options
-        , Ui.Typography.p200 [] options.label
-        ]
+    let
+        labelColor : Ui.Palette.Color
+        labelColor =
+            if options.isDisabled then
+                Ui.Palette.n600
+
+            else
+                Ui.Palette.n800
+    in
+    Ui.label []
+        (Ui.row [ Ui.Attr.align.center, Ui.Attr.gap.px12 ]
+            [ viewCheckboxIcon options
+            , Ui.Typography.p200 [ Ui.Attr.fontColor labelColor ] options.label
+            ]
+        )
 
 
 viewCheckboxIcon : { options | isDisabled : Bool, state : State, onClick : State -> msg } -> Ui.Html msg

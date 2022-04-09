@@ -2,7 +2,7 @@ module Ui exposing
     ( Html, Attribute, toHtml
     , none, text
     , el, row, col
-    , clickable
+    , clickable, label
     , icon
     )
 
@@ -11,7 +11,7 @@ module Ui exposing
 @docs Html, Attribute, toHtml
 @docs none, text
 @docs el, row, col
-@docs clickable
+@docs clickable, label
 @docs icon
 
 -}
@@ -144,6 +144,16 @@ col attrs children =
 el : List (Attribute msg) -> Html msg -> Html msg
 el attrs child =
     row attrs [ child ]
+
+
+label : List (Attribute msg) -> Html msg -> Html msg
+label attrs child =
+    createNode Html.Styled.label
+        (Html.Styled.Attributes.class "elm-row"
+            :: Html.Styled.Attributes.css rowStyles
+            :: List.concatMap Ui.Attr.toAttributes attrs
+        )
+        [ child ]
 
 
 clickable : Ui.Action.Action msg -> List (Attribute msg) -> Html msg -> Html msg

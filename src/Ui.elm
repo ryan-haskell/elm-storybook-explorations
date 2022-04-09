@@ -185,6 +185,6 @@ toIcon : Float -> Ui.Icon.Icon -> Html.Styled.Html msg
 toIcon size icon_ =
     Html.Styled.span
         [ Html.Styled.Attributes.class (Ui.Icon.toClassName icon_)
-        , Html.Styled.Attributes.css [ Css.fontSize (Css.px size) ]
+        , Html.Styled.Attributes.css [ Css.important (Css.fontSize (Css.px size)) ]
         ]
         []

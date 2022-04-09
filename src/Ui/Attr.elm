@@ -142,21 +142,25 @@ backgroundColor color =
 
 
 width :
-    { px32 : Attribute msg
+    { px16 : Attribute msg
+    , px32 : Attribute msg
     , px80 : Attribute msg
     }
 width =
-    { px32 = fromPixels Css.width 32
+    { px16 = fromPixels Css.width 16
+    , px32 = fromPixels Css.width 32
     , px80 = fromPixels Css.width 80
     }
 
 
 height :
-    { px32 : Attribute msg
+    { px16 : Attribute msg
+    , px32 : Attribute msg
     , px80 : Attribute msg
     }
 height =
-    { px32 = fromPixels Css.height 32
+    { px16 = fromPixels Css.height 16
+    , px32 = fromPixels Css.height 32
     , px80 = fromPixels Css.height 80
     }
 
@@ -187,12 +191,14 @@ gap :
     { px4 : Attribute msg
     , px8 : Attribute msg
     , px16 : Attribute msg
+    , px24 : Attribute msg
     , px40 : Attribute msg
     }
 gap =
     { px4 = toGap 4
     , px8 = toGap 8
     , px16 = toGap 16
+    , px24 = toGap 24
     , px40 = toGap 40
     }
 
@@ -353,6 +359,7 @@ ref =
 pad :
     { zero : Attribute msg
     , px4 : Attribute msg
+    , px6 : Attribute msg
     , px8 : Attribute msg
     , px16 : Attribute msg
     , px40 : Attribute msg
@@ -364,6 +371,7 @@ pad =
 padLeft :
     { zero : Attribute msg
     , px4 : Attribute msg
+    , px6 : Attribute msg
     , px8 : Attribute msg
     , px16 : Attribute msg
     , px40 : Attribute msg
@@ -375,6 +383,7 @@ padLeft =
 padRight :
     { zero : Attribute msg
     , px4 : Attribute msg
+    , px6 : Attribute msg
     , px8 : Attribute msg
     , px16 : Attribute msg
     , px40 : Attribute msg
@@ -386,6 +395,7 @@ padRight =
 padTop :
     { zero : Attribute msg
     , px4 : Attribute msg
+    , px6 : Attribute msg
     , px8 : Attribute msg
     , px16 : Attribute msg
     , px40 : Attribute msg
@@ -397,6 +407,7 @@ padTop =
 padBottom :
     { zero : Attribute msg
     , px4 : Attribute msg
+    , px6 : Attribute msg
     , px8 : Attribute msg
     , px16 : Attribute msg
     , px40 : Attribute msg
@@ -409,6 +420,7 @@ padXY :
     { zero :
         { zero : Attribute msg
         , px4 : Attribute msg
+        , px6 : Attribute msg
         , px8 : Attribute msg
         , px16 : Attribute msg
         , px40 : Attribute msg
@@ -416,6 +428,15 @@ padXY :
     , px4 :
         { zero : Attribute msg
         , px4 : Attribute msg
+        , px6 : Attribute msg
+        , px8 : Attribute msg
+        , px16 : Attribute msg
+        , px40 : Attribute msg
+        }
+    , px6 :
+        { zero : Attribute msg
+        , px4 : Attribute msg
+        , px6 : Attribute msg
         , px8 : Attribute msg
         , px16 : Attribute msg
         , px40 : Attribute msg
@@ -423,6 +444,7 @@ padXY :
     , px8 :
         { zero : Attribute msg
         , px4 : Attribute msg
+        , px6 : Attribute msg
         , px8 : Attribute msg
         , px16 : Attribute msg
         , px40 : Attribute msg
@@ -430,6 +452,7 @@ padXY :
     , px16 :
         { zero : Attribute msg
         , px4 : Attribute msg
+        , px6 : Attribute msg
         , px8 : Attribute msg
         , px16 : Attribute msg
         , px40 : Attribute msg
@@ -437,6 +460,7 @@ padXY :
     , px40 :
         { zero : Attribute msg
         , px4 : Attribute msg
+        , px6 : Attribute msg
         , px8 : Attribute msg
         , px16 : Attribute msg
         , px40 : Attribute msg
@@ -445,6 +469,7 @@ padXY :
 padXY =
     { zero = toPadXY "0"
     , px4 = toPadXY "4px"
+    , px6 = toPadXY "6px"
     , px8 = toPadXY "8px"
     , px16 = toPadXY "16px"
     , px40 = toPadXY "40px"
@@ -559,6 +584,7 @@ toPadding :
     ->
         { zero : Attribute msg
         , px4 : Attribute msg
+        , px6 : Attribute msg
         , px8 : Attribute msg
         , px16 : Attribute msg
         , px40 : Attribute msg
@@ -566,6 +592,7 @@ toPadding :
 toPadding propertyName =
     { zero = Styles [ Css.property propertyName "0" ]
     , px4 = Styles [ Css.property propertyName "4px" ]
+    , px6 = Styles [ Css.property propertyName "6px" ]
     , px8 = Styles [ Css.property propertyName "8px" ]
     , px16 = Styles [ Css.property propertyName "16px" ]
     , px40 = Styles [ Css.property propertyName "40px" ]
@@ -577,6 +604,7 @@ toPadXY :
     ->
         { zero : Attribute msg
         , px4 : Attribute msg
+        , px6 : Attribute msg
         , px8 : Attribute msg
         , px16 : Attribute msg
         , px40 : Attribute msg
@@ -584,6 +612,7 @@ toPadXY :
 toPadXY xValue =
     { zero = Styles [ Css.property "padding" ("0 " ++ xValue) ]
     , px4 = Styles [ Css.property "padding" ("4px " ++ xValue) ]
+    , px6 = Styles [ Css.property "padding" ("6px " ++ xValue) ]
     , px8 = Styles [ Css.property "padding" ("8px " ++ xValue) ]
     , px16 = Styles [ Css.property "padding" ("16px " ++ xValue) ]
     , px40 = Styles [ Css.property "padding" ("40px " ++ xValue) ]

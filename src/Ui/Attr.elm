@@ -166,10 +166,12 @@ height =
 
 
 border :
-    { px1 : Ui.Palette.Color -> Attribute msg
+    { none : Attribute msg
+    , px1 : Ui.Palette.Color -> Attribute msg
     }
 border =
-    { px1 = toBorder 1
+    { none = Styles [ Css.border Css.zero ]
+    , px1 = toBorder 1
     }
 
 
@@ -190,6 +192,7 @@ radius =
 gap :
     { px4 : Attribute msg
     , px8 : Attribute msg
+    , px12 : Attribute msg
     , px16 : Attribute msg
     , px24 : Attribute msg
     , px40 : Attribute msg
@@ -197,6 +200,7 @@ gap :
 gap =
     { px4 = toGap 4
     , px8 = toGap 8
+    , px12 = toGap 12
     , px16 = toGap 16
     , px24 = toGap 24
     , px40 = toGap 40

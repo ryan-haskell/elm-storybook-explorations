@@ -71,12 +71,14 @@ view _ model =
         , Ui.row [ Ui.Attr.gap.px16 ]
             [ Ui.Button.view
                 [ Ui.Button.iconLeft Ui.Icon.arrowLeft
+                , Ui.Button.disabled (model.currentStep == Step1)
                 ]
                 { label = "Previous"
                 , onClick = UserClickedPrevious
                 }
             , Ui.Button.view
                 [ Ui.Button.iconRight Ui.Icon.arrowRight
+                , Ui.Button.disabled (model.currentStep == Step3)
                 ]
                 { label = "Next"
                 , onClick = UserClickedNext

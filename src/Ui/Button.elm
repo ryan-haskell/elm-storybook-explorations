@@ -3,6 +3,7 @@ module Ui.Button exposing
     , Option
     , primary, secondary, minimal, error
     , iconLeft, iconRight
+    , disabled
     )
 
 {-|
@@ -61,6 +62,10 @@ viewWith options content =
                 [ Ui.Transition.borderColor
                 , Ui.Transition.background
                 , Ui.Transition.fontColor
+                ]
+            , Ui.Attr.isDisabled settings.isDisabled
+            , Ui.Attr.whenDisabled
+                [ Ui.Attr.cursor.disabled
                 ]
             ]
 
@@ -179,7 +184,7 @@ viewWith options content =
 
         viewLabel : String -> Ui.Html msg
         viewLabel label =
-            Ui.Typography.p200
+            Ui.Typography.h300
                 [ Ui.Attr.inherit.fontColor
                 , Ui.Attr.transition.ms100 [ Ui.Transition.fontColor ]
                 ]
@@ -239,6 +244,7 @@ viewWith options content =
 type Option msg
     = WithStyle ButtonStyle
     | WithIcon IconInfo
+    | WithDisabled Bool
 
 
 type ButtonStyle
@@ -283,6 +289,11 @@ iconRight icon =
     WithIcon (Right icon)
 
 
+disabled : Bool -> Option msg
+disabled bool =
+    WithDisabled bool
+
+
 
 -- SETTINGS
 
@@ -290,6 +301,7 @@ iconRight icon =
 type alias Settings =
     { style : ButtonStyle
     , icon : Maybe IconInfo
+    , isDisabled : Bool
     }
 
 
@@ -297,6 +309,7 @@ defaultSettings : Settings
 defaultSettings =
     { style = Primary
     , icon = Nothing
+    , isDisabled = False
     }
 
 
@@ -313,3 +326,6 @@ updateSettings option settings =
 
         WithIcon iconInfo ->
             { settings | icon = Just iconInfo }
+
+        WithDisabled bool ->
+            { settings | isDisabled = bool }

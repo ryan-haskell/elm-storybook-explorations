@@ -143,23 +143,29 @@ backgroundColor color =
 
 width :
     { px16 : Attribute msg
+    , px20 : Attribute msg
     , px32 : Attribute msg
     , px80 : Attribute msg
+    , px216 : Attribute msg
     }
 width =
     { px16 = fromPixels Css.width 16
+    , px20 = fromPixels Css.width 20
     , px32 = fromPixels Css.width 32
     , px80 = fromPixels Css.width 80
+    , px216 = fromPixels Css.width 216
     }
 
 
 height :
     { px16 : Attribute msg
+    , px20 : Attribute msg
     , px32 : Attribute msg
     , px80 : Attribute msg
     }
 height =
     { px16 = fromPixels Css.height 16
+    , px20 = fromPixels Css.height 20
     , px32 = fromPixels Css.height 32
     , px80 = fromPixels Css.height 80
     }
@@ -196,6 +202,7 @@ gap :
     , px16 : Attribute msg
     , px24 : Attribute msg
     , px40 : Attribute msg
+    , fill : Attribute msg
     }
 gap =
     { px4 = toGap 4
@@ -204,6 +211,7 @@ gap =
     , px16 = toGap 16
     , px24 = toGap 24
     , px40 = toGap 40
+    , fill = Styles [ Css.justifyContent Css.spaceBetween ]
     }
 
 
@@ -365,6 +373,7 @@ pad :
     , px4 : Attribute msg
     , px6 : Attribute msg
     , px8 : Attribute msg
+    , px12 : Attribute msg
     , px16 : Attribute msg
     , px40 : Attribute msg
     }
@@ -377,6 +386,7 @@ padLeft :
     , px4 : Attribute msg
     , px6 : Attribute msg
     , px8 : Attribute msg
+    , px12 : Attribute msg
     , px16 : Attribute msg
     , px40 : Attribute msg
     }
@@ -389,6 +399,7 @@ padRight :
     , px4 : Attribute msg
     , px6 : Attribute msg
     , px8 : Attribute msg
+    , px12 : Attribute msg
     , px16 : Attribute msg
     , px40 : Attribute msg
     }
@@ -401,6 +412,7 @@ padTop :
     , px4 : Attribute msg
     , px6 : Attribute msg
     , px8 : Attribute msg
+    , px12 : Attribute msg
     , px16 : Attribute msg
     , px40 : Attribute msg
     }
@@ -413,6 +425,7 @@ padBottom :
     , px4 : Attribute msg
     , px6 : Attribute msg
     , px8 : Attribute msg
+    , px12 : Attribute msg
     , px16 : Attribute msg
     , px40 : Attribute msg
     }
@@ -426,6 +439,7 @@ padXY :
         , px4 : Attribute msg
         , px6 : Attribute msg
         , px8 : Attribute msg
+        , px12 : Attribute msg
         , px16 : Attribute msg
         , px40 : Attribute msg
         }
@@ -434,6 +448,7 @@ padXY :
         , px4 : Attribute msg
         , px6 : Attribute msg
         , px8 : Attribute msg
+        , px12 : Attribute msg
         , px16 : Attribute msg
         , px40 : Attribute msg
         }
@@ -442,6 +457,7 @@ padXY :
         , px4 : Attribute msg
         , px6 : Attribute msg
         , px8 : Attribute msg
+        , px12 : Attribute msg
         , px16 : Attribute msg
         , px40 : Attribute msg
         }
@@ -450,6 +466,16 @@ padXY :
         , px4 : Attribute msg
         , px6 : Attribute msg
         , px8 : Attribute msg
+        , px12 : Attribute msg
+        , px16 : Attribute msg
+        , px40 : Attribute msg
+        }
+    , px12 :
+        { zero : Attribute msg
+        , px4 : Attribute msg
+        , px6 : Attribute msg
+        , px8 : Attribute msg
+        , px12 : Attribute msg
         , px16 : Attribute msg
         , px40 : Attribute msg
         }
@@ -458,6 +484,7 @@ padXY :
         , px4 : Attribute msg
         , px6 : Attribute msg
         , px8 : Attribute msg
+        , px12 : Attribute msg
         , px16 : Attribute msg
         , px40 : Attribute msg
         }
@@ -466,6 +493,7 @@ padXY :
         , px4 : Attribute msg
         , px6 : Attribute msg
         , px8 : Attribute msg
+        , px12 : Attribute msg
         , px16 : Attribute msg
         , px40 : Attribute msg
         }
@@ -475,6 +503,7 @@ padXY =
     , px4 = toPadXY "4px"
     , px6 = toPadXY "6px"
     , px8 = toPadXY "8px"
+    , px12 = toPadXY "12px"
     , px16 = toPadXY "16px"
     , px40 = toPadXY "40px"
     }
@@ -590,6 +619,7 @@ toPadding :
         , px4 : Attribute msg
         , px6 : Attribute msg
         , px8 : Attribute msg
+        , px12 : Attribute msg
         , px16 : Attribute msg
         , px40 : Attribute msg
         }
@@ -598,6 +628,7 @@ toPadding propertyName =
     , px4 = Styles [ Css.property propertyName "4px" ]
     , px6 = Styles [ Css.property propertyName "6px" ]
     , px8 = Styles [ Css.property propertyName "8px" ]
+    , px12 = Styles [ Css.property propertyName "12px" ]
     , px16 = Styles [ Css.property propertyName "16px" ]
     , px40 = Styles [ Css.property propertyName "40px" ]
     }
@@ -610,6 +641,7 @@ toPadXY :
         , px4 : Attribute msg
         , px6 : Attribute msg
         , px8 : Attribute msg
+        , px12 : Attribute msg
         , px16 : Attribute msg
         , px40 : Attribute msg
         }
@@ -618,6 +650,7 @@ toPadXY xValue =
     , px4 = Styles [ Css.property "padding" ("4px " ++ xValue) ]
     , px6 = Styles [ Css.property "padding" ("6px " ++ xValue) ]
     , px8 = Styles [ Css.property "padding" ("8px " ++ xValue) ]
+    , px12 = Styles [ Css.property "padding" ("12px " ++ xValue) ]
     , px16 = Styles [ Css.property "padding" ("16px " ++ xValue) ]
     , px40 = Styles [ Css.property "padding" ("40px " ++ xValue) ]
     }

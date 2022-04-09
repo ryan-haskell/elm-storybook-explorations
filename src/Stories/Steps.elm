@@ -4,15 +4,89 @@ import Storybook.Component exposing (Component)
 import Storybook.Controls
 import Ui
 import Ui.Attr
+import Ui.Button
+import Ui.Icon
 import Ui.Steps
 
 
-main : Component () msg
+main : Component Model Msg
 main =
-    Storybook.Component.stateless
+    Storybook.Component.sandbox
         { controls = Storybook.Controls.none
+        , init = init
+        , update = update
         , view = view
         }
+
+
+
+-- INIT
+
+
+type alias Model =
+    { currentStep : Step
+    }
+
+
+init : Model
+init =
+    { currentStep = Step1
+    }
+
+
+
+-- UPDATE
+
+
+type Msg
+    = UserClickedNext
+    | UserClickedPrevious
+
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        UserClickedNext ->
+            { model | currentStep = nextStep model.currentStep }
+
+        UserClickedPrevious ->
+            { model | currentStep = previousStep model.currentStep }
+
+
+
+-- VIEW
+
+
+view : () -> Model -> Ui.Html Msg
+view _ model =
+    Ui.col
+        [ Ui.Attr.align.center
+        , Ui.Attr.gap.px40
+        ]
+        [ Ui.Steps.view
+            { steps = [ Step1, Step2, Step3 ]
+            , toLabel = fromStepToLabel
+            , current = model.currentStep
+            }
+        , Ui.row [ Ui.Attr.gap.px16 ]
+            [ Ui.Button.view
+                [ Ui.Button.iconLeft Ui.Icon.arrowLeft
+                ]
+                { label = "Previous"
+                , onClick = UserClickedPrevious
+                }
+            , Ui.Button.view
+                [ Ui.Button.iconRight Ui.Icon.arrowRight
+                ]
+                { label = "Next"
+                , onClick = UserClickedNext
+                }
+            ]
+        ]
+
+
+
+-- STEPS
 
 
 type Step
@@ -34,29 +108,27 @@ fromStepToLabel step =
             "Buy some oranges"
 
 
+nextStep : Step -> Step
+nextStep step =
+    case step of
+        Step1 ->
+            Step2
 
--- VIEW
+        Step2 ->
+            Step3
+
+        Step3 ->
+            Step3
 
 
-view : () -> Ui.Html msg
-view _ =
-    Ui.col
-        [ Ui.Attr.align.left
-        , Ui.Attr.gap.px40
-        ]
-        [ Ui.Steps.view
-            { steps = [ Step1, Step2, Step3 ]
-            , toLabel = fromStepToLabel
-            , current = Step1
-            }
-        , Ui.Steps.view
-            { steps = [ Step1, Step2, Step3 ]
-            , toLabel = fromStepToLabel
-            , current = Step2
-            }
-        , Ui.Steps.view
-            { steps = [ Step1, Step2, Step3 ]
-            , toLabel = fromStepToLabel
-            , current = Step3
-            }
-        ]
+previousStep : Step -> Step
+previousStep step =
+    case step of
+        Step1 ->
+            Step1
+
+        Step2 ->
+            Step1
+
+        Step3 ->
+            Step2

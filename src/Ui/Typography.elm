@@ -24,8 +24,8 @@ h900 attributes text =
         { color = Ui.Palette.n900
         , fontSize = 32
         , lineHeight = 40
-        , weight = Semibold
-        , family = SansSerif
+        , weight = Ui.Attr.Semibold
+        , family = Ui.Attr.SansSerif
         , attributes = attributes
         , text = text
         }
@@ -37,8 +37,8 @@ h800 attributes text =
         { color = Ui.Palette.n900
         , fontSize = 24
         , lineHeight = 32
-        , weight = Semibold
-        , family = SansSerif
+        , weight = Ui.Attr.Semibold
+        , family = Ui.Attr.SansSerif
         , attributes = attributes
         , text = text
         }
@@ -50,8 +50,8 @@ h700 attributes text =
         { color = Ui.Palette.n900
         , fontSize = 20
         , lineHeight = 24
-        , weight = Semibold
-        , family = SansSerif
+        , weight = Ui.Attr.Semibold
+        , family = Ui.Attr.SansSerif
         , attributes = attributes
         , text = text
         }
@@ -63,8 +63,8 @@ h600 attributes text =
         { color = Ui.Palette.n900
         , fontSize = 18
         , lineHeight = 24
-        , weight = Semibold
-        , family = SansSerif
+        , weight = Ui.Attr.Semibold
+        , family = Ui.Attr.SansSerif
         , attributes = attributes
         , text = text
         }
@@ -76,8 +76,8 @@ h500 attributes text =
         { color = Ui.Palette.n900
         , fontSize = 16
         , lineHeight = 24
-        , weight = Semibold
-        , family = SansSerif
+        , weight = Ui.Attr.Semibold
+        , family = Ui.Attr.SansSerif
         , attributes = attributes
         , text = text
         }
@@ -89,8 +89,8 @@ h400 attributes text =
         { color = Ui.Palette.n900
         , fontSize = 14
         , lineHeight = 24
-        , weight = Medium
-        , family = SansSerif
+        , weight = Ui.Attr.Medium
+        , family = Ui.Attr.SansSerif
         , attributes = attributes
         , text = text
         }
@@ -102,8 +102,8 @@ h300 attributes text =
         { color = Ui.Palette.n900
         , fontSize = 12
         , lineHeight = 16
-        , weight = Medium
-        , family = SansSerif
+        , weight = Ui.Attr.Medium
+        , family = Ui.Attr.SansSerif
         , attributes = attributes
         , text = text
         }
@@ -115,8 +115,8 @@ h200 attributes str =
         { color = Ui.Palette.n800
         , fontSize = 12
         , lineHeight = 16
-        , weight = Semibold
-        , family = SansSerif
+        , weight = Ui.Attr.Semibold
+        , family = Ui.Attr.SansSerif
         , attributes = attributes
         , text = String.toUpper str
         }
@@ -130,8 +130,8 @@ h150 attributes str =
         { color = Ui.Palette.n800
         , fontSize = 11
         , lineHeight = 16
-        , weight = Semibold
-        , family = SansSerif
+        , weight = Ui.Attr.Semibold
+        , family = Ui.Attr.SansSerif
         , attributes = attributes
         , text = String.toUpper str
         }
@@ -143,8 +143,8 @@ h100 attributes str =
         { color = Ui.Palette.n800
         , fontSize = 10
         , lineHeight = 16
-        , weight = Medium
-        , family = SansSerif
+        , weight = Ui.Attr.Medium
+        , family = Ui.Attr.SansSerif
         , attributes = attributes
         , text = String.toUpper str
         }
@@ -160,8 +160,8 @@ p300 attributes text =
         { color = Ui.Palette.n800
         , fontSize = 16
         , lineHeight = 24
-        , weight = Regular
-        , family = SansSerif
+        , weight = Ui.Attr.Regular
+        , family = Ui.Attr.SansSerif
         , attributes = attributes
         , text = text
         }
@@ -173,8 +173,8 @@ p200 attributes text =
         { color = Ui.Palette.n800
         , fontSize = 14
         , lineHeight = 20
-        , weight = Regular
-        , family = SansSerif
+        , weight = Ui.Attr.Regular
+        , family = Ui.Attr.SansSerif
         , attributes = attributes
         , text = text
         }
@@ -186,8 +186,8 @@ p100 attributes text =
         { color = Ui.Palette.n800
         , fontSize = 12
         , lineHeight = 16
-        , weight = Regular
-        , family = SansSerif
+        , weight = Ui.Attr.Regular
+        , family = Ui.Attr.SansSerif
         , attributes = attributes
         , text = text
         }
@@ -203,8 +203,8 @@ codeMinimal attributes str =
         { color = Ui.Palette.n800
         , fontSize = 14
         , lineHeight = 16
-        , weight = Regular
-        , family = Monospace
+        , weight = Ui.Attr.Regular
+        , family = Ui.Attr.Monospace
         , attributes =
             [ Ui.Attr.backgroundColor Ui.Palette.n50
             , Ui.Attr.border.px1 Ui.Palette.n400
@@ -222,8 +222,8 @@ code attributes str =
         { color = Ui.Palette.b600
         , fontSize = 14
         , lineHeight = 16
-        , weight = Regular
-        , family = Monospace
+        , weight = Ui.Attr.Regular
+        , family = Ui.Attr.Monospace
         , attributes =
             [ Ui.Attr.backgroundColor Ui.Palette.b50
             , Ui.Attr.border.px1 Ui.Palette.b200
@@ -243,8 +243,8 @@ viewTypography :
     { color : Ui.Palette.Color
     , fontSize : Float
     , lineHeight : Float
-    , weight : Weight
-    , family : Family
+    , weight : Ui.Attr.Weight
+    , family : Ui.Attr.Family
     , attributes : List (Ui.Attribute msg)
     , text : String
     }
@@ -260,8 +260,8 @@ toUiTypographyAttr :
         | color : Ui.Palette.Color
         , fontSize : Float
         , lineHeight : Float
-        , weight : Weight
-        , family : Family
+        , weight : Ui.Attr.Weight
+        , family : Ui.Attr.Family
     }
     -> Ui.Attribute msg
 toUiTypographyAttr options =
@@ -269,40 +269,6 @@ toUiTypographyAttr options =
         { color = options.color
         , fontSize = options.fontSize
         , lineHeight = options.lineHeight
-        , weight = fromFontWeightToInt options.weight
-        , families = toFontFamilies options.family
+        , weight = options.weight
+        , families = options.family
         }
-
-
-type Weight
-    = Regular
-    | Medium
-    | Semibold
-
-
-fromFontWeightToInt : Weight -> Int
-fromFontWeightToInt weight =
-    case weight of
-        Regular ->
-            400
-
-        Medium ->
-            500
-
-        Semibold ->
-            600
-
-
-type Family
-    = SansSerif
-    | Monospace
-
-
-toFontFamilies : Family -> List String
-toFontFamilies family =
-    case family of
-        SansSerif ->
-            [ "Inter", "sans-serif" ]
-
-        Monospace ->
-            [ "Fira Code", "monospace" ]

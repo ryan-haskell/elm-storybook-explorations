@@ -1,7 +1,7 @@
 module Ui.Attr exposing
     ( Attribute, toAttributes
     , none, list, map
-    , typography, textAlign
+    , Weight(..), Family(..), typography, textAlign
     , fontColor, backgroundColor
     , border, radius
     , width, height
@@ -14,13 +14,17 @@ module Ui.Attr exposing
     , cursor, outline
     , inherit, wrap, ref
     , isDisabled
+    , pointerEventsNone
+    , relative, absolute
+    , z1, z2
+    , onKeyPressed, id
     )
 
 {-|
 
 @docs Attribute, toAttributes
 @docs none, list, map
-@docs typography, textAlign
+@docs Weight, Family, typography, textAlign
 @docs fontColor, backgroundColor
 @docs border, radius
 @docs width, height
@@ -40,41 +44,120 @@ module Ui.Attr exposing
 @docs cursor, outline
 
 @docs inherit, wrap, ref
+@docs isDisabled
+@docs pointerEventsNone
+
+
+## Layers
+
+@docs relative, absolute
+@docs z1, z2
+
+
+## Events
+
+@docs onKeyPressed, id
 
 -}
 
 import Css
+import Dict exposing (Dict)
 import Html.Styled
 import Html.Styled.Attributes
+import Html.Styled.Events
+import Json.Decode
 import Ui.Palette
 import Ui.Transition
 
 
 type Attribute msg
     = Styles (List Css.Style)
+    | Id String
     | Class String
     | Ref String
     | IsDisabled Bool
+    | KeyDown String msg
     | Batch (List (Attribute msg))
 
 
-toAttributes : Attribute msg -> List (Html.Styled.Attribute msg)
-toAttributes attr =
+toAttributes : List (Attribute msg) -> List (Html.Styled.Attribute msg)
+toAttributes attrs =
+    let
+        { attributes, keyDownEvents } =
+            toBatchAttributes attrs
+    in
+    keyDownHandler keyDownEvents :: attributes
+
+
+toBatchAttributes :
+    List (Attribute msg)
+    ->
+        { attributes : List (Html.Styled.Attribute msg)
+        , keyDownEvents : Dict String msg
+        }
+toBatchAttributes attrs =
+    List.foldl
+        (\attr data ->
+            let
+                { attributes, keyDownEvents } =
+                    toAttributesInternal attr data.keyDownEvents
+            in
+            { attributes = data.attributes ++ attributes
+            , keyDownEvents = keyDownEvents
+            }
+        )
+        { attributes = []
+        , keyDownEvents = Dict.empty
+        }
+        attrs
+
+
+toAttributesInternal :
+    Attribute msg
+    -> Dict String msg
+    ->
+        { attributes : List (Html.Styled.Attribute msg)
+        , keyDownEvents : Dict String msg
+        }
+toAttributesInternal attr keyDownEvents =
     case attr of
         Styles css ->
-            [ Html.Styled.Attributes.css css ]
+            { attributes = [ Html.Styled.Attributes.css css ]
+            , keyDownEvents = keyDownEvents
+            }
 
         Class name ->
-            [ Html.Styled.Attributes.class name ]
+            { attributes = [ Html.Styled.Attributes.class name ]
+            , keyDownEvents = keyDownEvents
+            }
+
+        Id name ->
+            { attributes = [ Html.Styled.Attributes.id name ]
+            , keyDownEvents = keyDownEvents
+            }
 
         Ref name ->
-            [ Html.Styled.Attributes.attribute "ref" name ]
+            { attributes = [ Html.Styled.Attributes.attribute "ref" name ]
+            , keyDownEvents = keyDownEvents
+            }
 
         IsDisabled bool ->
-            [ Html.Styled.Attributes.disabled bool ]
+            { attributes = [ Html.Styled.Attributes.disabled bool ]
+            , keyDownEvents = keyDownEvents
+            }
+
+        KeyDown code msg ->
+            { attributes = []
+            , keyDownEvents = Dict.insert code msg keyDownEvents
+            }
 
         Batch items ->
-            List.concatMap toAttributes items
+            toBatchAttributes items
+
+
+keyDownHandler : Dict String msg -> Html.Styled.Attribute msg
+keyDownHandler keyDownEvents =
+    Html.Styled.Events.on "keydown" (toKeyDownDecoder keyDownEvents)
 
 
 
@@ -91,20 +174,31 @@ list attrs =
     Batch attrs
 
 
+id : String -> Attribute msg
+id str =
+    Id str
+
+
 map : (msg1 -> msg2) -> Attribute msg1 -> Attribute msg2
 map fn attr =
     case attr of
-        Styles s ->
-            Styles s
+        Styles list_ ->
+            Styles list_
 
-        Class s ->
-            Class s
+        Class string ->
+            Class string
 
-        Ref s ->
-            Ref s
+        Ref string ->
+            Ref string
 
-        IsDisabled b ->
-            IsDisabled b
+        Id string ->
+            Id string
+
+        IsDisabled bool ->
+            IsDisabled bool
+
+        KeyDown code msg1 ->
+            KeyDown code (fn msg1)
 
         Batch attrs ->
             Batch (List.map (map fn) attrs)
@@ -113,6 +207,26 @@ map fn attr =
 isDisabled : Bool -> Attribute msg
 isDisabled =
     IsDisabled
+
+
+
+-- EVENTS
+
+
+onKeyPressed :
+    { spacebar : msg -> Attribute msg
+    , arrowUp : msg -> Attribute msg
+    , arrowDown : msg -> Attribute msg
+    , escape : msg -> Attribute msg
+    , enter : msg -> Attribute msg
+    }
+onKeyPressed =
+    { spacebar = KeyDown "Space"
+    , arrowUp = KeyDown "ArrowUp"
+    , arrowDown = KeyDown "ArrowDown"
+    , escape = KeyDown "Escape"
+    , enter = KeyDown "Enter"
+    }
 
 
 
@@ -141,12 +255,38 @@ backgroundColor color =
     Styles [ Css.backgroundColor color ]
 
 
+pointerEventsNone : Attribute msg
+pointerEventsNone =
+    Styles [ Css.pointerEvents Css.none ]
+
+
+relative : Attribute msg
+relative =
+    Styles [ Css.position Css.relative ]
+
+
+absolute : Attribute msg
+absolute =
+    Class "elm-absolute"
+
+
+z1 : Attribute msg
+z1 =
+    Styles [ Css.zIndex (Css.int 1) ]
+
+
+z2 : Attribute msg
+z2 =
+    Styles [ Css.zIndex (Css.int 2) ]
+
+
 width :
     { px16 : Attribute msg
     , px20 : Attribute msg
     , px32 : Attribute msg
     , px80 : Attribute msg
     , px216 : Attribute msg
+    , fill : Attribute msg
     }
 width =
     { px16 = fromPixels Css.width 16
@@ -154,6 +294,7 @@ width =
     , px32 = fromPixels Css.width 32
     , px80 = fromPixels Css.width 80
     , px216 = fromPixels Css.width 216
+    , fill = Styles [ Css.width (Css.pct 100) ]
     }
 
 
@@ -184,19 +325,24 @@ border =
 radius :
     { px4 : Attribute msg
     , px8 : Attribute msg
+    , top : { px4 : Attribute msg }
+    , bottom : { px4 : Attribute msg }
     , left : { px4 : Attribute msg }
     , right : { px4 : Attribute msg }
     }
 radius =
-    { px4 = fromPixels Css.borderRadius 4
-    , px8 = fromPixels Css.borderRadius 8
+    { px4 = toBorderRadius 4
+    , px8 = toBorderRadius 8
+    , top = { px4 = toBorderRadiusTop 4 }
+    , bottom = { px4 = toBorderRadiusBottom 4 }
     , left = { px4 = toBorderRadiusLeft 4 }
     , right = { px4 = toBorderRadiusRight 4 }
     }
 
 
 gap :
-    { px4 : Attribute msg
+    { px1 : Attribute msg
+    , px4 : Attribute msg
     , px8 : Attribute msg
     , px12 : Attribute msg
     , px16 : Attribute msg
@@ -205,7 +351,8 @@ gap :
     , fill : Attribute msg
     }
 gap =
-    { px4 = toGap 4
+    { px1 = toGap 1
+    , px4 = toGap 4
     , px8 = toGap 8
     , px12 = toGap 12
     , px16 = toGap 16
@@ -223,6 +370,10 @@ align :
     , left : Attribute msg
     , bottom : Attribute msg
     , right : Attribute msg
+    , above : Attribute msg
+    , below : Attribute msg
+    , toLeftOf : Attribute msg
+    , toRightOf : Attribute msg
     }
 align =
     { center =
@@ -236,6 +387,12 @@ align =
     , left = Class "elm-align-left"
     , bottom = Class "elm-align-bottom"
     , right = Class "elm-align-right"
+
+    -- Only work with `Ui.absolute`
+    , above = Class "elm-align-above"
+    , below = Class "elm-align-below"
+    , toLeftOf = Class "elm-align-toLeftOf"
+    , toRightOf = Class "elm-align-toRightOf"
     }
 
 
@@ -249,12 +406,23 @@ textAlign =
     }
 
 
+type Weight
+    = Regular
+    | Medium
+    | Semibold
+
+
+type Family
+    = SansSerif
+    | Monospace
+
+
 typography :
     { fontSize : Float
     , color : Ui.Palette.Color
     , lineHeight : Float
-    , weight : Int
-    , families : List String
+    , weight : Weight
+    , families : Family
     }
     -> Attribute msg
 typography options =
@@ -262,8 +430,8 @@ typography options =
         [ Css.fontSize (Css.px options.fontSize)
         , Css.color options.color
         , Css.lineHeight (Css.px options.lineHeight)
-        , Css.fontWeight (Css.int options.weight)
-        , Css.fontFamilies options.families
+        , Css.fontWeight (Css.int (fromFontWeightToInt options.weight))
+        , Css.fontFamilies (toFontFamilies options.families)
         ]
 
 
@@ -362,9 +530,6 @@ ref =
 
 
 
--- whenHoveredProvideRef : String -> List (Attribute msg) -> Attribute msg
--- whenHoveredProvideRef str attrs =
---     Class "hover:ref"
 -- PADDING
 
 
@@ -375,6 +540,7 @@ pad :
     , px8 : Attribute msg
     , px12 : Attribute msg
     , px16 : Attribute msg
+    , px32 : Attribute msg
     , px40 : Attribute msg
     }
 pad =
@@ -388,6 +554,7 @@ padLeft :
     , px8 : Attribute msg
     , px12 : Attribute msg
     , px16 : Attribute msg
+    , px32 : Attribute msg
     , px40 : Attribute msg
     }
 padLeft =
@@ -401,6 +568,7 @@ padRight :
     , px8 : Attribute msg
     , px12 : Attribute msg
     , px16 : Attribute msg
+    , px32 : Attribute msg
     , px40 : Attribute msg
     }
 padRight =
@@ -414,6 +582,7 @@ padTop :
     , px8 : Attribute msg
     , px12 : Attribute msg
     , px16 : Attribute msg
+    , px32 : Attribute msg
     , px40 : Attribute msg
     }
 padTop =
@@ -427,6 +596,7 @@ padBottom :
     , px8 : Attribute msg
     , px12 : Attribute msg
     , px16 : Attribute msg
+    , px32 : Attribute msg
     , px40 : Attribute msg
     }
 padBottom =
@@ -441,6 +611,7 @@ padXY :
         , px8 : Attribute msg
         , px12 : Attribute msg
         , px16 : Attribute msg
+        , px32 : Attribute msg
         , px40 : Attribute msg
         }
     , px4 :
@@ -450,6 +621,7 @@ padXY :
         , px8 : Attribute msg
         , px12 : Attribute msg
         , px16 : Attribute msg
+        , px32 : Attribute msg
         , px40 : Attribute msg
         }
     , px6 :
@@ -459,6 +631,7 @@ padXY :
         , px8 : Attribute msg
         , px12 : Attribute msg
         , px16 : Attribute msg
+        , px32 : Attribute msg
         , px40 : Attribute msg
         }
     , px8 :
@@ -468,6 +641,7 @@ padXY :
         , px8 : Attribute msg
         , px12 : Attribute msg
         , px16 : Attribute msg
+        , px32 : Attribute msg
         , px40 : Attribute msg
         }
     , px12 :
@@ -477,6 +651,7 @@ padXY :
         , px8 : Attribute msg
         , px12 : Attribute msg
         , px16 : Attribute msg
+        , px32 : Attribute msg
         , px40 : Attribute msg
         }
     , px16 :
@@ -486,6 +661,17 @@ padXY :
         , px8 : Attribute msg
         , px12 : Attribute msg
         , px16 : Attribute msg
+        , px32 : Attribute msg
+        , px40 : Attribute msg
+        }
+    , px32 :
+        { zero : Attribute msg
+        , px4 : Attribute msg
+        , px6 : Attribute msg
+        , px8 : Attribute msg
+        , px12 : Attribute msg
+        , px16 : Attribute msg
+        , px32 : Attribute msg
         , px40 : Attribute msg
         }
     , px40 :
@@ -495,6 +681,7 @@ padXY :
         , px8 : Attribute msg
         , px12 : Attribute msg
         , px16 : Attribute msg
+        , px32 : Attribute msg
         , px40 : Attribute msg
         }
     }
@@ -505,6 +692,7 @@ padXY =
     , px8 = toPadXY "8px"
     , px12 = toPadXY "12px"
     , px16 = toPadXY "16px"
+    , px32 = toPadXY "32px"
     , px40 = toPadXY "40px"
     }
 
@@ -553,6 +741,29 @@ elevation =
 -- INTERNALS
 
 
+fromFontWeightToInt : Weight -> Int
+fromFontWeightToInt weight =
+    case weight of
+        Regular ->
+            400
+
+        Medium ->
+            500
+
+        Semibold ->
+            600
+
+
+toFontFamilies : Family -> List String
+toFontFamilies family =
+    case family of
+        SansSerif ->
+            [ "Inter", "sans-serif" ]
+
+        Monospace ->
+            [ "Fira Code", "monospace" ]
+
+
 toElevation :
     { rgb : ( Int, Int, Int )
     , x : Float
@@ -596,6 +807,29 @@ toBorder px color =
         ]
 
 
+toBorderRadius : Float -> Attribute msg
+toBorderRadius px =
+    Styles
+        [ Css.borderRadius (Css.px px)
+        ]
+
+
+toBorderRadiusTop : Float -> Attribute msg
+toBorderRadiusTop px =
+    Styles
+        [ Css.borderTopLeftRadius (Css.px px)
+        , Css.borderTopRightRadius (Css.px px)
+        ]
+
+
+toBorderRadiusBottom : Float -> Attribute msg
+toBorderRadiusBottom px =
+    Styles
+        [ Css.borderBottomLeftRadius (Css.px px)
+        , Css.borderBottomRightRadius (Css.px px)
+        ]
+
+
 toBorderRadiusLeft : Float -> Attribute msg
 toBorderRadiusLeft px =
     Styles
@@ -621,6 +855,7 @@ toPadding :
         , px8 : Attribute msg
         , px12 : Attribute msg
         , px16 : Attribute msg
+        , px32 : Attribute msg
         , px40 : Attribute msg
         }
 toPadding propertyName =
@@ -630,6 +865,7 @@ toPadding propertyName =
     , px8 = Styles [ Css.property propertyName "8px" ]
     , px12 = Styles [ Css.property propertyName "12px" ]
     , px16 = Styles [ Css.property propertyName "16px" ]
+    , px32 = Styles [ Css.property propertyName "32px" ]
     , px40 = Styles [ Css.property propertyName "40px" ]
     }
 
@@ -643,6 +879,7 @@ toPadXY :
         , px8 : Attribute msg
         , px12 : Attribute msg
         , px16 : Attribute msg
+        , px32 : Attribute msg
         , px40 : Attribute msg
         }
 toPadXY xValue =
@@ -652,6 +889,7 @@ toPadXY xValue =
     , px8 = Styles [ Css.property "padding" ("8px " ++ xValue) ]
     , px12 = Styles [ Css.property "padding" ("12px " ++ xValue) ]
     , px16 = Styles [ Css.property "padding" ("16px " ++ xValue) ]
+    , px32 = Styles [ Css.property "padding" ("32px " ++ xValue) ]
     , px40 = Styles [ Css.property "padding" ("40px " ++ xValue) ]
     }
 
@@ -679,10 +917,16 @@ keepOnlyCssStyles attrs =
                 Class _ ->
                     []
 
+                Id _ ->
+                    []
+
                 Ref _ ->
                     []
 
                 IsDisabled _ ->
+                    []
+
+                KeyDown _ _ ->
                     []
 
                 Batch items ->
@@ -714,3 +958,21 @@ toOutline px color =
         [ Css.outlineOffset Css.zero
         , Css.outline3 (Css.px px) Css.solid color
         ]
+
+
+
+-- KEY EVENTS
+
+
+toKeyDownDecoder : Dict String msg -> Json.Decode.Decoder msg
+toKeyDownDecoder events =
+    Json.Decode.field "code" Json.Decode.string
+        |> Json.Decode.andThen
+            (\actualCode ->
+                case Dict.get actualCode events of
+                    Just msg ->
+                        Json.Decode.succeed msg
+
+                    Nothing ->
+                        Json.Decode.fail ("No handler for" ++ actualCode)
+            )

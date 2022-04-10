@@ -2,7 +2,8 @@ module Ui exposing
     ( Html, Attribute, toHtml
     , none, text
     , el, row, col
-    , clickable, label
+    , clickable
+    , input, label
     , icon
     )
 
@@ -11,7 +12,8 @@ module Ui exposing
 @docs Html, Attribute, toHtml
 @docs none, text
 @docs el, row, col
-@docs clickable, label
+@docs clickable
+@docs input, label
 @docs icon
 
 -}
@@ -21,6 +23,7 @@ import Css.Global
 import Html
 import Html.Styled
 import Html.Styled.Attributes
+import Html.Styled.Events
 import Ui.Action
 import Ui.Attr
 import Ui.Icon
@@ -36,7 +39,7 @@ type alias Attribute msg =
 
 toHtml : Html msg -> Html.Html msg
 toHtml html =
-    Html.Styled.toUnstyled (Html.Styled.div (List.concatMap Ui.Attr.toAttributes topLevelAttributes) [ globalCss, html ])
+    Html.Styled.toUnstyled (Html.Styled.div (Ui.Attr.toAttributes topLevelAttributes) [ globalCss, html ])
 
 
 globalCss : Html msg
@@ -57,8 +60,15 @@ globalCss =
             [ Css.fontFamilies [ "Inter", "sans-serif" ]
             , Css.lineHeight (Css.int 1)
             ]
+        , Css.Global.selector "::placeholder"
+            [ Css.property "font" "inherit"
+            , Css.color Css.inherit
+            ]
+        , Css.Global.input
+            [ Css.width (Css.pct 100)
+            ]
 
-        -- Ui.col flex align properties
+        -- Ui.col alignment
         , Css.Global.selector ".elm-col.elm-align-left" [ Css.alignItems Css.flexStart ]
         , Css.Global.selector ".elm-col.elm-align-right" [ Css.alignItems Css.flexEnd ]
         , Css.Global.selector ".elm-col.elm-align-top" [ Css.justifyContent Css.flexStart ]
@@ -66,13 +76,32 @@ globalCss =
         , Css.Global.selector ".elm-col.elm-align-center-x" [ Css.alignItems Css.center ]
         , Css.Global.selector ".elm-col.elm-align-center-y" [ Css.justifyContent Css.center ]
 
-        -- Ui.row flex align properties
+        -- Ui.row alignment
         , Css.Global.selector ".elm-row.elm-align-left" [ Css.justifyContent Css.flexStart ]
         , Css.Global.selector ".elm-row.elm-align-right" [ Css.justifyContent Css.flexEnd ]
         , Css.Global.selector ".elm-row.elm-align-top" [ Css.alignItems Css.flexStart ]
         , Css.Global.selector ".elm-row.elm-align-bottom" [ Css.alignItems Css.flexEnd ]
         , Css.Global.selector ".elm-row.elm-align-center-x" [ Css.justifyContent Css.center ]
         , Css.Global.selector ".elm-row.elm-align-center-y" [ Css.alignItems Css.center ]
+
+        -- Ui.absolute alignment
+        , Css.Global.class "elm-absolute" [ Css.position Css.absolute ]
+        , Css.Global.selector ".elm-absolute.elm-align-left" [ Css.left Css.zero ]
+        , Css.Global.selector ".elm-absolute.elm-align-right" [ Css.right Css.zero ]
+        , Css.Global.selector ".elm-absolute.elm-align-top" [ Css.top Css.zero ]
+        , Css.Global.selector ".elm-absolute.elm-align-bottom" [ Css.bottom Css.zero ]
+        , Css.Global.selector ".elm-absolute.elm-align-toLeftOf" [ Css.right (Css.pct 100) ]
+        , Css.Global.selector ".elm-absolute.elm-align-toRightOf" [ Css.left (Css.pct 100) ]
+        , Css.Global.selector ".elm-absolute.elm-align-above" [ Css.bottom (Css.pct 100) ]
+        , Css.Global.selector ".elm-absolute.elm-align-below" [ Css.top (Css.pct 100) ]
+        , Css.Global.selector ".elm-absolute.elm-align-center-x"
+            [ Css.left (Css.pct 50)
+            , Css.transform (Css.translateX (Css.pct -50))
+            ]
+        , Css.Global.selector ".elm-absolute.elm-align-center-y"
+            [ Css.top (Css.pct 50)
+            , Css.transform (Css.translateY (Css.pct -50))
+            ]
 
         -- Refs allow for design edge cases where using normal CSS would be easier.
         -- I am very afraid of these being abused, so please add refs with caution!
@@ -123,12 +152,7 @@ icon =
 
 row : List (Attribute msg) -> List (Html msg) -> Html msg
 row attrs children =
-    createNode Html.Styled.div
-        (Html.Styled.Attributes.class "elm-row"
-            :: Html.Styled.Attributes.css rowStyles
-            :: List.concatMap Ui.Attr.toAttributes attrs
-        )
-        children
+    rowWithTag Html.Styled.div attrs children
 
 
 col : List (Attribute msg) -> List (Html msg) -> Html msg
@@ -136,34 +160,49 @@ col attrs children =
     createNode Html.Styled.div
         (Html.Styled.Attributes.class "elm-col"
             :: Html.Styled.Attributes.css colStyles
-            :: List.concatMap Ui.Attr.toAttributes attrs
+            :: Ui.Attr.toAttributes attrs
         )
         children
 
 
 el : List (Attribute msg) -> Html msg -> Html msg
 el attrs child =
-    row attrs [ child ]
+    rowWithTag Html.Styled.div attrs [ child ]
+
+
+absolute : List (Attribute msg) -> Html msg -> Html msg
+absolute attrs child =
+    rowWithTag Html.Styled.div (Ui.Attr.absolute :: attrs) [ child ]
 
 
 label : List (Attribute msg) -> Html msg -> Html msg
 label attrs child =
-    createNode Html.Styled.label
+    rowWithTag Html.Styled.label attrs [ child ]
+
+
+input :
+    List (Attribute msg)
+    ->
+        { placeholder : String
+        , value : String
+        , onInput : String -> msg
+        }
+    -> Html msg
+input attrs options =
+    createNode Html.Styled.input
         (Html.Styled.Attributes.class "elm-row"
             :: Html.Styled.Attributes.css rowStyles
-            :: List.concatMap Ui.Attr.toAttributes attrs
+            :: Html.Styled.Attributes.placeholder options.placeholder
+            :: Html.Styled.Events.onInput options.onInput
+            :: Html.Styled.Attributes.value options.value
+            :: Ui.Attr.toAttributes attrs
         )
-        [ child ]
+        []
 
 
 clickable : Ui.Action.Action msg -> List (Attribute msg) -> Html msg -> Html msg
 clickable action attrs child =
-    createNode (Ui.Action.toHtmlNode action)
-        (Html.Styled.Attributes.class "elm-row"
-            :: Html.Styled.Attributes.css rowStyles
-            :: List.concatMap Ui.Attr.toAttributes attrs
-        )
-        [ child ]
+    rowWithTag (Ui.Action.toHtmlNode action) attrs [ child ]
 
 
 
@@ -198,3 +237,17 @@ toIcon size icon_ =
         , Html.Styled.Attributes.css [ Css.important (Css.fontSize (Css.px size)) ]
         ]
         []
+
+
+rowWithTag :
+    (List (Html.Styled.Attribute msg) -> List (Html.Styled.Html msg) -> Html.Styled.Html msg)
+    -> List (Attribute msg)
+    -> List (Html msg)
+    -> Html msg
+rowWithTag tag attrs children =
+    createNode tag
+        (Html.Styled.Attributes.class "elm-row"
+            :: Html.Styled.Attributes.css rowStyles
+            :: Ui.Attr.toAttributes attrs
+        )
+        children

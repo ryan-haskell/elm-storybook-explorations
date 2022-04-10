@@ -17,6 +17,8 @@ main =
 
 type Msg
     = UserClickedSelect
+    | UserPressedArrowUp
+    | UserPressedArrowDown
 
 
 
@@ -34,6 +36,8 @@ view _ =
                 , value = Nothing
                 , error = Nothing
                 , onClick = UserClickedSelect
+                , onArrowUp = UserPressedArrowUp
+                , onArrowDown = UserPressedArrowDown
                 , isDisabled = False
                 }
             , Ui.Select.view
@@ -41,6 +45,8 @@ view _ =
                 , value = Just "Apples"
                 , error = Nothing
                 , onClick = UserClickedSelect
+                , onArrowUp = UserPressedArrowUp
+                , onArrowDown = UserPressedArrowDown
                 , isDisabled = False
                 }
             , Ui.Select.view
@@ -48,6 +54,8 @@ view _ =
                 , value = Just "Apples"
                 , error = Just "Something went wrong."
                 , onClick = UserClickedSelect
+                , onArrowUp = UserPressedArrowUp
+                , onArrowDown = UserPressedArrowDown
                 , isDisabled = False
                 }
             ]
@@ -57,6 +65,8 @@ view _ =
                 , value = Nothing
                 , error = Nothing
                 , onClick = UserClickedSelect
+                , onArrowUp = UserPressedArrowUp
+                , onArrowDown = UserPressedArrowDown
                 , isDisabled = True
                 }
             , Ui.Select.view
@@ -64,6 +74,8 @@ view _ =
                 , value = Just "Apples"
                 , error = Nothing
                 , onClick = UserClickedSelect
+                , onArrowUp = UserPressedArrowUp
+                , onArrowDown = UserPressedArrowDown
                 , isDisabled = True
                 }
             , Ui.Select.view
@@ -71,6 +83,8 @@ view _ =
                 , value = Nothing
                 , error = Just "Something went wrong."
                 , onClick = UserClickedSelect
+                , onArrowUp = UserPressedArrowUp
+                , onArrowDown = UserPressedArrowDown
                 , isDisabled = True
                 }
             ]

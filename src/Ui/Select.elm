@@ -12,8 +12,10 @@ view :
     { placeholder : String
     , value : Maybe String
     , error : Maybe String
-    , onClick : msg
     , isDisabled : Bool
+    , onClick : msg
+    , onArrowUp : msg
+    , onArrowDown : msg
     }
     -> Ui.Html msg
 view options =
@@ -76,6 +78,8 @@ view options =
                     , Ui.Attr.border.px1 Ui.Palette.n300
                     , Ui.Attr.fontColor Ui.Palette.n600
                     ]
+                , Ui.Attr.onKeyPressed.arrowUp options.onArrowUp
+                , Ui.Attr.onKeyPressed.arrowDown options.onArrowDown
                 ]
                 (Ui.row
                     [ Ui.Attr.width.px216

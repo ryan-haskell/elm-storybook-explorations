@@ -12,7 +12,7 @@ module Ui.Attr exposing
     , transition
     , whenHovered, whenDisabled, whenFocused, whenPressed
     , cursor, outline
-    , inherit, wrap, ref
+    , inherit, wrap, scroll, ref
     , isDisabled
     , pointerEventsNone
     , relative, absolute
@@ -43,7 +43,7 @@ module Ui.Attr exposing
 @docs whenHovered, whenDisabled, whenFocused, whenPressed
 @docs cursor, outline
 
-@docs inherit, wrap, ref
+@docs inherit, wrap, scroll, ref
 @docs isDisabled
 @docs pointerEventsNone
 
@@ -244,6 +244,11 @@ inherit =
     }
 
 
+scroll : Attribute msg
+scroll =
+    Styles [ Css.overflow Css.auto ]
+
+
 wrap : { none : Attribute msg }
 wrap =
     { none = Styles [ Css.whiteSpace Css.noWrap ]
@@ -303,22 +308,32 @@ height :
     , px20 : Attribute msg
     , px32 : Attribute msg
     , px80 : Attribute msg
+    , max : { px273 : Attribute msg }
     }
 height =
     { px16 = fromPixels Css.height 16
     , px20 = fromPixels Css.height 20
     , px32 = fromPixels Css.height 32
     , px80 = fromPixels Css.height 80
+    , max =
+        { px273 = fromPixels Css.maxHeight 273
+        }
     }
 
 
 border :
     { none : Attribute msg
     , px1 : Ui.Palette.Color -> Attribute msg
+    , left :
+        { px2 : Ui.Palette.Color -> Attribute msg
+        }
     }
 border =
     { none = Styles [ Css.border Css.zero ]
     , px1 = toBorder 1
+    , left =
+        { px2 = toBorderLeft 2
+        }
     }
 
 
@@ -804,6 +819,15 @@ toBorder px color =
         [ Css.borderStyle Css.solid
         , Css.borderColor color
         , Css.borderWidth (Css.px px)
+        ]
+
+
+toBorderLeft : Float -> Ui.Palette.Color -> Attribute msg
+toBorderLeft px color =
+    Styles
+        [ Css.borderLeftStyle Css.solid
+        , Css.borderLeftColor color
+        , Css.borderLeftWidth (Css.px px)
         ]
 
 

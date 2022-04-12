@@ -12,6 +12,7 @@ module Ui.Palette exposing
     , p600, p500, p400, p300, p200, p100, p50
     , o600, o500, o400, o300, o200, o100, o50
     , chartColors
+    , transparent
     )
 
 {-|
@@ -207,6 +208,11 @@ n50 =
 n0 : Color
 n0 =
     Css.hex "#FFFFFF"
+
+
+transparent : Color
+transparent =
+    Css.hex "#00000000"
 
 
 

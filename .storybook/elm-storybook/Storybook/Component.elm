@@ -1,12 +1,12 @@
 port module Storybook.Component exposing
     ( Component
-    , stateless, sandbox
+    , stateless, sandbox, element
     )
 
 {-|
 
 @docs Component
-@docs stateless, sandbox
+@docs stateless, sandbox, element
 
 -}
 
@@ -45,7 +45,7 @@ stateless options =
                   }
                 , Cmd.none
                 )
-        , update = update (\_ model -> model)
+        , update = updateSandbox (\_ model -> model)
         , view = view >> Ui.toHtml
         , subscriptions = \_ -> Sub.none
         }
@@ -79,7 +79,46 @@ sandbox options =
     in
     Browser.element
         { init = init
-        , update = update options.update
+        , update = updateSandbox options.update
+        , view = view >> Ui.toHtml
+        , subscriptions = \_ -> Sub.none
+        }
+
+
+element :
+    { controls : Storybook.Controls.Decoder controls
+    , init : ( model, Cmd msg )
+    , update : msg -> model -> ( model, Cmd msg )
+    , subscriptions : model -> Sub msg
+    , view : controls -> model -> Ui.Html msg
+    }
+    -> Component model msg
+element options =
+    let
+        init : Json.Value -> ( ComponentModel model, Cmd msg )
+        init json =
+            let
+                ( model, cmd ) =
+                    options.init
+            in
+            ( { controls = json
+              , component = model
+              }
+            , cmd
+            )
+
+        view : ComponentModel model -> Ui.Html msg
+        view model =
+            options.view
+                (Storybook.Controls.decode
+                    model.controls
+                    options.controls
+                )
+                model.component
+    in
+    Browser.element
+        { init = init
+        , update = updateElement options.update
         , view = view >> Ui.toHtml
         , subscriptions = \_ -> Sub.none
         }
@@ -104,16 +143,36 @@ component's `update` function, we use the `logAction` port
 to let Storybook's "Actions" tab log which Elm message was
 sent.
 -}
-update :
+updateSandbox :
     (msg -> model -> model)
     -> msg
     -> ComponentModel model
     -> ( ComponentModel model, Cmd msg )
-update componentUpdateFn msg model =
+updateSandbox componentUpdateFn msg model =
     ( { model | component = componentUpdateFn msg model.component }
     , logAction
         { payload = Json.Encode.string (Debug.toString msg)
         }
+    )
+
+
+updateElement :
+    (msg -> model -> ( model, Cmd msg ))
+    -> msg
+    -> ComponentModel model
+    -> ( ComponentModel model, Cmd msg )
+updateElement componentUpdateFn msg model =
+    let
+        ( newComponentModel, cmd ) =
+            componentUpdateFn msg model.component
+    in
+    ( { model | component = newComponentModel }
+    , Cmd.batch
+        [ logAction
+            { payload = Json.Encode.string (Debug.toString msg)
+            }
+        , cmd
+        ]
     )
 
 

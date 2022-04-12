@@ -1,4 +1,4 @@
-module Ui.Dropdown exposing (group, item, view)
+module Ui.Dropdown exposing (group, item, view, viewMenu)
 
 import Ui
 import Ui.Action
@@ -12,34 +12,36 @@ import Ui.Typography
 view :
     { placeholder : String
     , selected : Maybe value
-    , items : List (Item value)
     , toLabel : value -> String
-    , searchInputValue : String
-    , isMenuOpen : Bool
-    , onSelectClicked : msg
-    , onOptionClicked : value -> msg
-    , onSearchInputChanged : String -> msg
-    , onSelectSpacebar : msg
     , onSelectArrowUp : msg
     , onSelectArrowDown : msg
     }
     -> Ui.Html msg
 view options =
-    let
-        viewSelectInput : Ui.Html msg
-        viewSelectInput =
-            Ui.Select.view
-                { placeholder = options.placeholder
-                , value = options.selected |> Maybe.map options.toLabel
-                , error = Nothing
-                , onClick = options.onSelectClicked
-                , isDisabled = False
-                , onArrowUp = options.onSelectArrowUp
-                , onArrowDown = options.onSelectArrowDown
-                }
+    Ui.Select.view
+        { placeholder = options.placeholder
+        , value = options.selected |> Maybe.map options.toLabel
+        , error = Nothing
+        , isDisabled = False
+        , onArrowUp = options.onSelectArrowUp
+        , onArrowDown = options.onSelectArrowDown
+        }
 
-        viewItem : String -> Int -> Item value -> Ui.Html msg
-        viewItem menuId index item_ =
+
+viewMenu :
+    { menuId : String
+    , selected : Maybe value
+    , items : List (Item value)
+    , toLabel : value -> String
+    , searchInputValue : String
+    , onOptionClicked : value -> msg
+    , onSearchInputChanged : String -> msg
+    }
+    -> Ui.Html msg
+viewMenu options =
+    let
+        viewMenuItem : Int -> Item value -> Ui.Html msg
+        viewMenuItem index item_ =
             case item_ of
                 Group label ->
                     Ui.Typography.h200
@@ -50,48 +52,64 @@ view options =
                         label
 
                 Option value ->
+                    let
+                        isSelected : Bool
+                        isSelected =
+                            Just value == options.selected
+
+                        backgroundColor : Ui.Attribute msg
+                        backgroundColor =
+                            if isSelected then
+                                Ui.Attr.backgroundColor Ui.Palette.b100
+
+                            else
+                                Ui.Attr.list
+                                    [ Ui.Attr.backgroundColor Ui.Palette.n0
+                                    , Ui.Attr.whenHovered
+                                        [ Ui.Attr.backgroundColor Ui.Palette.n50
+                                        ]
+                                    ]
+
+                        fontColor : Ui.Attribute msg
+                        fontColor =
+                            if isSelected then
+                                Ui.Attr.fontColor Ui.Palette.b400
+
+                            else
+                                Ui.Attr.fontColor Ui.Palette.n800
+
+                        border : Ui.Attribute msg
+                        border =
+                            if isSelected then
+                                Ui.Attr.border.left.px2 Ui.Palette.b400
+
+                            else
+                                Ui.Attr.border.left.px2 Ui.Palette.transparent
+                    in
                     Ui.clickable (Ui.Action.fromMsg (options.onOptionClicked value))
-                        [ Ui.Attr.backgroundColor Ui.Palette.n0
+                        [ backgroundColor
+                        , border
                         , Ui.Attr.padXY.px12.px8
                         , Ui.Attr.cursor.pointer
                         , Ui.Attr.whenFocused
                             [ Ui.Attr.outline.px2 Ui.Palette.b200
                             , Ui.Attr.relative
                             ]
-                        , Ui.Attr.id (menuId ++ "__option-" ++ String.fromInt index)
+                        , Ui.Attr.id (options.menuId ++ "__option-" ++ String.fromInt index)
                         ]
                         (Ui.Typography.p100
-                            [ Ui.Attr.fontColor Ui.Palette.n800
+                            [ fontColor
                             ]
                             (options.toLabel value)
                         )
 
-        viewMenu : String -> Ui.Html msg
-        viewMenu menuId =
-            Ui.el
-                [ Ui.Attr.padTop.px8
-                ]
-                (Ui.col
-                    [ Ui.Attr.backgroundColor Ui.Palette.n300
-                    , Ui.Attr.radius.px4
-                    , Ui.Attr.border.px1 Ui.Palette.n300
-                    , Ui.Attr.elevation.level2
-                    , Ui.Attr.gap.px1
-                    , Ui.Attr.absolute
-                    , Ui.Attr.width.fill
-                    , Ui.Attr.align.below
-                    ]
-                    [ viewSearchInput menuId
-                    , viewMenuOptions menuId
-                    ]
-                )
+        viewMenuOptions : Ui.Html msg
+        viewMenuOptions =
+            Ui.col [ Ui.Attr.gap.px1 ]
+                (List.indexedMap viewMenuItem options.items)
 
-        viewMenuOptions : String -> Ui.Html msg
-        viewMenuOptions menuId =
-            Ui.col [ Ui.Attr.gap.px1 ] (List.indexedMap (viewItem menuId) options.items)
-
-        viewSearchInput : String -> Ui.Html msg
-        viewSearchInput menuId =
+        viewSearchInput : Ui.Html msg
+        viewSearchInput =
             Ui.row []
                 [ Ui.el
                     [ Ui.Attr.absolute
@@ -121,7 +139,7 @@ view options =
                         , Ui.Attr.relative
                         , Ui.Attr.z1
                         ]
-                    , Ui.Attr.id (menuId ++ "__search")
+                    , Ui.Attr.id (options.menuId ++ "__search")
                     ]
                     { placeholder = "Search by name"
                     , value = options.searchInputValue
@@ -129,15 +147,24 @@ view options =
                     }
                 ]
     in
-    Ui.col [ Ui.Attr.relative ]
-        [ viewSelectInput
-        , if options.isMenuOpen then
-            viewMenu "1"
-            -- TODO: Pass this in from elm-layers
-
-          else
-            Ui.none
+    Ui.el
+        [ Ui.Attr.padTop.px4
         ]
+        (Ui.col
+            [ Ui.Attr.backgroundColor Ui.Palette.n300
+            , Ui.Attr.radius.px4
+            , Ui.Attr.border.px1 Ui.Palette.n300
+            , Ui.Attr.elevation.level2
+            , Ui.Attr.gap.px1
+            , Ui.Attr.width.fill
+            , Ui.Attr.align.below
+            , Ui.Attr.height.max.px273
+            , Ui.Attr.scroll
+            ]
+            [ viewSearchInput
+            , viewMenuOptions
+            ]
+        )
 
 
 type Item value

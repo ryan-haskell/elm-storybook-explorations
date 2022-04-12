@@ -13,7 +13,6 @@ view :
     , value : Maybe String
     , error : Maybe String
     , isDisabled : Bool
-    , onClick : msg
     , onArrowUp : msg
     , onArrowDown : msg
     }
@@ -47,7 +46,7 @@ view options =
 
         viewSelectInput : Ui.Html msg
         viewSelectInput =
-            Ui.clickable (Ui.Action.fromMsg options.onClick)
+            Ui.el
                 [ borderWhenValid Ui.Palette.n400
                 , Ui.Attr.backgroundColor Ui.Palette.n0
                 , if isFilledIn then

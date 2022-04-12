@@ -69,6 +69,7 @@ globalCss =
             ]
 
         -- Ui.col alignment
+        , Css.Global.selector ".elm-col > *" [ Css.flexShrink Css.zero ]
         , Css.Global.selector ".elm-col.elm-align-left" [ Css.alignItems Css.flexStart ]
         , Css.Global.selector ".elm-col.elm-align-right" [ Css.alignItems Css.flexEnd ]
         , Css.Global.selector ".elm-col.elm-align-top" [ Css.justifyContent Css.flexStart ]

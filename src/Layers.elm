@@ -1,4 +1,12 @@
-module Layers exposing (Model, Msg, init, update, view, viewButton)
+module Layers exposing
+    ( Model
+    , Msg
+    , idForItem
+    , init
+    , toggleMenu
+    , update
+    , view
+    )
 
 import AssocList as Dict exposing (Dict)
 import Browser.Dom
@@ -49,6 +57,22 @@ update options =
         options.toAppModel
         (Cmd.map options.toAppMsg)
         (update_ options.msg options.model)
+
+
+toggleMenu :
+    { item : item
+    , model : Model item
+    , toAppMsg : Msg item -> msg
+    , toAppModel : Model item -> model
+    }
+    -> ( model, Cmd msg )
+toggleMenu options =
+    update
+        { msg = Open options.item
+        , model = options.model
+        , toAppModel = options.toAppModel
+        , toAppMsg = options.toAppMsg
+        }
 
 
 update_ : Msg item -> Model item -> ( Model item, Cmd (Msg item) )
@@ -217,6 +241,12 @@ attributesFor options =
 
         Nothing ->
             attributes
+
+
+idForItem : item -> Model item -> Maybe String
+idForItem item (Model model) =
+    Dict.get item model.open
+        |> Maybe.map .id
 
 
 

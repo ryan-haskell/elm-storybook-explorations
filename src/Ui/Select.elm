@@ -12,7 +12,9 @@ view :
     { placeholder : String
     , value : Maybe String
     , error : Maybe String
+    , buttonId : Maybe String
     , isDisabled : Bool
+    , onClick : msg
     , onArrowUp : msg
     , onArrowDown : msg
     }
@@ -46,9 +48,15 @@ view options =
 
         viewSelectInput : Ui.Html msg
         viewSelectInput =
-            Ui.el
+            Ui.clickable (Ui.Action.fromMsg options.onClick)
                 [ borderWhenValid Ui.Palette.n400
                 , Ui.Attr.backgroundColor Ui.Palette.n0
+                , case options.buttonId of
+                    Just id ->
+                        Ui.Attr.id id
+
+                    Nothing ->
+                        Ui.Attr.none
                 , if isFilledIn then
                     Ui.Attr.fontColor Ui.Palette.n800
 

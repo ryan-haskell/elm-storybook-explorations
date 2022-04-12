@@ -12,7 +12,9 @@ import Ui.Typography
 view :
     { placeholder : String
     , selected : Maybe value
+    , buttonId : Maybe String
     , toLabel : value -> String
+    , onSelectClicked : msg
     , onSelectArrowUp : msg
     , onSelectArrowDown : msg
     }
@@ -21,8 +23,10 @@ view options =
     Ui.Select.view
         { placeholder = options.placeholder
         , value = options.selected |> Maybe.map options.toLabel
+        , buttonId = options.buttonId
         , error = Nothing
         , isDisabled = False
+        , onClick = options.onSelectClicked
         , onArrowUp = options.onSelectArrowUp
         , onArrowDown = options.onSelectArrowDown
         }

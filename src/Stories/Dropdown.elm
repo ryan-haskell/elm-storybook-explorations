@@ -50,6 +50,7 @@ init =
 
 type Msg
     = LayersSentMsg (Layers.Msg Item)
+    | UserClickedSelect
     | UserClickedOption Fruit
     | UserChangedSearchInput String
     | UserPressedArrowUpOnSelect
@@ -63,6 +64,14 @@ update msg model =
             Layers.update
                 { model = model.layers
                 , msg = layersMsg
+                , toAppMsg = LayersSentMsg
+                , toAppModel = \layers -> { model | layers = layers }
+                }
+
+        UserClickedSelect ->
+            Layers.toggleMenu
+                { item = DropdownMenu
+                , model = model.layers
                 , toAppMsg = LayersSentMsg
                 , toAppModel = \layers -> { model | layers = layers }
                 }
@@ -185,22 +194,15 @@ view _ model =
 viewAppLayer : Model -> Ui.Html Msg
 viewAppLayer model =
     Ui.col [ Ui.Attr.align.left ]
-        [ Ui.el []
-            (Layers.viewButton
-                { item = DropdownMenu
-                , model = model.layers
-                , toAppMsg = LayersSentMsg
-                }
-                []
-                [ Ui.Dropdown.view
-                    { placeholder = "Select fruit"
-                    , toLabel = fromFruitToLabel
-                    , onSelectArrowUp = UserPressedArrowUpOnSelect
-                    , onSelectArrowDown = UserPressedArrowDownOnSelect
-                    , selected = model.selected
-                    }
-                ]
-            )
+        [ Ui.Dropdown.view
+            { placeholder = "Select fruit"
+            , toLabel = fromFruitToLabel
+            , buttonId = Layers.idForItem DropdownMenu model.layers
+            , onSelectClicked = UserClickedSelect
+            , onSelectArrowUp = UserPressedArrowUpOnSelect
+            , onSelectArrowDown = UserPressedArrowDownOnSelect
+            , selected = model.selected
+            }
         , Ui.Typography.p200 [ Ui.Attr.relative ] "Hey I'm a paragraph, and I love blocking dropdown menus!!"
         ]
 

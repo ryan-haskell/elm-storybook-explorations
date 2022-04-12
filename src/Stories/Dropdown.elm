@@ -193,7 +193,7 @@ view _ model =
 
 viewAppLayer : Model -> Ui.Html Msg
 viewAppLayer model =
-    Ui.col [ Ui.Attr.align.left ]
+    Ui.col [ Ui.Attr.align.left, Ui.Attr.gap.px8 ]
         [ Ui.Dropdown.view
             { placeholder = "Select fruit"
             , toLabel = fromFruitToLabel
@@ -203,7 +203,7 @@ viewAppLayer model =
             , onSelectArrowDown = UserPressedArrowDownOnSelect
             , selected = model.selected
             }
-        , Ui.Typography.p200 [ Ui.Attr.relative ] "Hey I'm a paragraph, and I love blocking dropdown menus!!"
+        , Ui.Typography.p100 [ Ui.Attr.width.px216, Ui.Attr.relative ] "Hey I'm a paragraph, and I love blocking dropdown menus!! Even though this has a higher z-index, we will never see it block the dropdown menu!"
         ]
 
 
@@ -225,13 +225,21 @@ viewLayerItem model id item parent =
                     , selected = model.selected
                     , toLabel = fromFruitToLabel
                     , items =
-                        [ Ui.Dropdown.group "Fruits"
-                        , Ui.Dropdown.item Apple
-                        , Ui.Dropdown.item Banana
-                        , Ui.Dropdown.item Cherry
-                        ]
+                        List.concat
+                            [ [ Ui.Dropdown.group "Fruits" ]
+                            , fruits
+                                |> List.filter (contains model.searchInputValue)
+                                |> List.map Ui.Dropdown.item
+                            ]
                     , searchInputValue = model.searchInputValue
                     , onOptionClicked = UserClickedOption
                     , onSearchInputChanged = UserChangedSearchInput
                     }
                 )
+
+
+contains : String -> Fruit -> Bool
+contains searchString fruit =
+    String.contains
+        (String.toLower searchString)
+        (String.toLower (fromFruitToLabel fruit))

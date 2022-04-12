@@ -43,6 +43,7 @@ viewMenu :
     , onArrowUp : msg
     , onArrowDown : msg
     , onEscape : msg
+    , onEnter : msg
     }
     -> Ui.Html msg
 viewMenu options =
@@ -159,6 +160,7 @@ viewMenu options =
         [ Ui.Attr.padTop.px4
         , Ui.Attr.onKeyPressed.arrowUp options.onArrowUp
         , Ui.Attr.onKeyPressed.arrowDown options.onArrowDown
+        , Ui.Attr.onKeyPressed.enter options.onEnter
         , Ui.Attr.onKeyPressed.escape options.onEscape
         ]
         (Ui.col

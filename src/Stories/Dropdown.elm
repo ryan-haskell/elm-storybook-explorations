@@ -57,7 +57,8 @@ type Msg
     | UserChangedSearchInput String
     | UserPressedArrowUp
     | UserPressedArrowDown
-    | UserPressedEscape
+    | UserPressedEscapeInMenu
+    | UserPressedEnterInMenu
     | LayersOpenedMenu String Item
     | BrowserFocusedSearchInput (Result Browser.Dom.Error ())
 
@@ -86,26 +87,21 @@ update msg model =
         LayersOpenedMenu menuId item ->
             ( model
             , Browser.Dom.focus
-                ("elm-layers-menu-{{id}}__search" |> String.replace "{{id}}" menuId)
+                (toSearchInputId menuId)
                 |> Task.attempt BrowserFocusedSearchInput
             )
 
         BrowserFocusedSearchInput _ ->
             ( model, Cmd.none )
 
-        UserPressedEscape ->
-            Layers.closeMenu
-                { item = DropdownMenu
-                , model = model.layers
-                , toAppMsg = LayersSentMsg
-                , toAppModel = \layers -> { model | layers = layers, searchInputValue = "" }
-                , onOpenComplete = LayersOpenedMenu
-                }
+        UserPressedEscapeInMenu ->
+            closeDropdownMenuAndClearSearch model
+
+        UserPressedEnterInMenu ->
+            closeDropdownMenuAndClearSearch model
 
         UserClickedOption fruit ->
-            ( { model | selected = Just fruit }
-            , Cmd.none
-            )
+            closeDropdownMenuAndClearSearch { model | selected = Just fruit }
 
         UserChangedSearchInput string ->
             ( { model | searchInputValue = string }
@@ -131,6 +127,28 @@ update msg model =
               }
             , Cmd.none
             )
+
+
+toSearchInputId : String -> String
+toSearchInputId menuId =
+    "elm-layers-menu-{{id}}__search"
+        |> String.replace "{{id}}" menuId
+
+
+closeDropdownMenuAndClearSearch : Model -> ( Model, Cmd Msg )
+closeDropdownMenuAndClearSearch model =
+    Layers.closeMenu
+        { item = DropdownMenu
+        , model = model.layers
+        , toAppMsg = LayersSentMsg
+        , toAppModel =
+            \layers ->
+                { model
+                    | layers = layers
+                    , searchInputValue = ""
+                }
+        , onOpenComplete = LayersOpenedMenu
+        }
 
 
 previous : Maybe Fruit -> List Fruit -> Maybe Fruit
@@ -272,7 +290,8 @@ viewLayerItem model id item parent =
                     , onSearchInputChanged = UserChangedSearchInput
                     , onArrowUp = UserPressedArrowUp
                     , onArrowDown = UserPressedArrowDown
-                    , onEscape = UserPressedEscape
+                    , onEscape = UserPressedEscapeInMenu
+                    , onEnter = UserPressedEnterInMenu
                     }
                 )
 

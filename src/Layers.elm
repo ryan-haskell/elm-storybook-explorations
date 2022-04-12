@@ -51,13 +51,17 @@ update :
     , msg : Msg item
     , toAppMsg : Msg item -> msg
     , toAppModel : Model item -> model
+    , onOpenComplete : String -> item -> msg
     }
     -> ( model, Cmd msg )
 update options =
-    Tuple.mapBoth
+    Tuple.mapFirst
         options.toAppModel
-        (Cmd.map options.toAppMsg)
-        (update_ options.msg options.model)
+        (update_ options.toAppMsg
+            options.onOpenComplete
+            options.msg
+            options.model
+        )
 
 
 toggleMenu :
@@ -65,6 +69,7 @@ toggleMenu :
     , model : Model item
     , toAppMsg : Msg item -> msg
     , toAppModel : Model item -> model
+    , onOpenComplete : String -> item -> msg
     }
     -> ( model, Cmd msg )
 toggleMenu options =
@@ -82,6 +87,7 @@ toggleMenu options =
         , model = options.model
         , toAppModel = options.toAppModel
         , toAppMsg = options.toAppMsg
+        , onOpenComplete = options.onOpenComplete
         }
 
 
@@ -90,6 +96,7 @@ closeMenu :
     , model : Model item
     , toAppMsg : Msg item -> msg
     , toAppModel : Model item -> model
+    , onOpenComplete : String -> item -> msg
     }
     -> ( model, Cmd msg )
 closeMenu options =
@@ -98,16 +105,22 @@ closeMenu options =
         , model = options.model
         , toAppModel = options.toAppModel
         , toAppMsg = options.toAppMsg
+        , onOpenComplete = options.onOpenComplete
         }
 
 
-update_ : Msg item -> Model item -> ( Model item, Cmd (Msg item) )
-update_ msg (Model model) =
+update_ :
+    (Msg item -> msg)
+    -> (String -> item -> msg)
+    -> Msg item
+    -> Model item
+    -> ( Model item, Cmd msg )
+update_ toMsg onOpenComplete msg (Model model) =
     case msg of
         Open item ->
             ( Model model
             , Time.now
-                |> Task.perform (GotTime item)
+                |> Task.perform (GotTime item >> toMsg)
             )
 
         GotTime item posix ->
@@ -125,20 +138,27 @@ update_ msg (Model model) =
                         model.open
                 }
             , Browser.Dom.getElement id
-                |> Task.attempt (GotElement item id)
+                |> Task.attempt (GotElement item id >> toMsg)
             )
 
         GotElement item id (Ok parent) ->
-            ( Model
-                { model
-                    | open =
-                        Dict.insert item
-                            { id = id
-                            , parent = Just parent
-                            }
-                            model.open
-                }
-            , Cmd.none
+            let
+                open : Dict item Data
+                open =
+                    Dict.insert item
+                        { id = id
+                        , parent = Just parent
+                        }
+                        model.open
+
+                menuId : String
+                menuId =
+                    Dict.size open
+                        |> String.fromInt
+            in
+            ( Model { model | open = open }
+            , Task.perform identity
+                (Task.succeed (onOpenComplete menuId item))
             )
 
         GotElement _ _ (Err (Browser.Dom.NotFound _)) ->

@@ -7,6 +7,7 @@ import List.Extra
 import Simple.Fuzzy
 import Storybook.Component exposing (Component)
 import Storybook.Controls
+import Task
 import Ui
 import Ui.Attr
 import Ui.Dropdown
@@ -57,6 +58,8 @@ type Msg
     | UserPressedArrowUp
     | UserPressedArrowDown
     | UserPressedEscape
+    | LayersOpenedMenu String Item
+    | BrowserFocusedSearchInput (Result Browser.Dom.Error ())
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -68,6 +71,7 @@ update msg model =
                 , msg = layersMsg
                 , toAppMsg = LayersSentMsg
                 , toAppModel = \layers -> { model | layers = layers }
+                , onOpenComplete = LayersOpenedMenu
                 }
 
         UserClickedSelect ->
@@ -76,7 +80,18 @@ update msg model =
                 , model = model.layers
                 , toAppMsg = LayersSentMsg
                 , toAppModel = \layers -> { model | layers = layers }
+                , onOpenComplete = LayersOpenedMenu
                 }
+
+        LayersOpenedMenu menuId item ->
+            ( model
+            , Browser.Dom.focus
+                ("elm-layers-menu-{{id}}__search" |> String.replace "{{id}}" menuId)
+                |> Task.attempt BrowserFocusedSearchInput
+            )
+
+        BrowserFocusedSearchInput _ ->
+            ( model, Cmd.none )
 
         UserPressedEscape ->
             Layers.closeMenu
@@ -84,6 +99,7 @@ update msg model =
                 , model = model.layers
                 , toAppMsg = LayersSentMsg
                 , toAppModel = \layers -> { model | layers = layers, searchInputValue = "" }
+                , onOpenComplete = LayersOpenedMenu
                 }
 
         UserClickedOption fruit ->

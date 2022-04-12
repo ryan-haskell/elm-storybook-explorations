@@ -40,6 +40,9 @@ viewMenu :
     , searchInputValue : String
     , onOptionClicked : value -> msg
     , onSearchInputChanged : String -> msg
+    , onArrowUp : msg
+    , onArrowDown : msg
+    , onEscape : msg
     }
     -> Ui.Html msg
 viewMenu options =
@@ -128,6 +131,7 @@ viewMenu options =
                 , Ui.input
                     [ Ui.Attr.backgroundColor Ui.Palette.n0
                     , Ui.Attr.padTop.px8
+                    , Ui.Attr.autocomplete False
                     , Ui.Attr.padBottom.px8
                     , Ui.Attr.padLeft.px32
                     , Ui.Attr.padRight.px16
@@ -153,6 +157,9 @@ viewMenu options =
     in
     Ui.el
         [ Ui.Attr.padTop.px4
+        , Ui.Attr.onKeyPressed.arrowUp options.onArrowUp
+        , Ui.Attr.onKeyPressed.arrowDown options.onArrowDown
+        , Ui.Attr.onKeyPressed.escape options.onEscape
         ]
         (Ui.col
             [ Ui.Attr.backgroundColor Ui.Palette.n300

@@ -17,7 +17,7 @@ module Ui.Attr exposing
     , pointerEventsNone
     , relative, absolute
     , z1, z2
-    , onKeyPressed, id
+    , onKeyPressed, id, autocomplete
     )
 
 {-|
@@ -56,7 +56,7 @@ module Ui.Attr exposing
 
 ## Events
 
-@docs onKeyPressed, id
+@docs onKeyPressed, id, autocomplete
 
 -}
 
@@ -77,6 +77,7 @@ type Attribute msg
     | Ref String
     | IsDisabled Bool
     | KeyDown String msg
+    | Raw (Html.Styled.Attribute msg)
     | Batch (List (Attribute msg))
 
 
@@ -141,6 +142,11 @@ toAttributesInternal attr keyDownEvents =
             , keyDownEvents = keyDownEvents
             }
 
+        Raw attribute ->
+            { attributes = [ attribute ]
+            , keyDownEvents = keyDownEvents
+            }
+
         IsDisabled bool ->
             { attributes = [ Html.Styled.Attributes.disabled bool ]
             , keyDownEvents = keyDownEvents
@@ -158,6 +164,11 @@ toAttributesInternal attr keyDownEvents =
 keyDownHandler : Dict String msg -> Html.Styled.Attribute msg
 keyDownHandler keyDownEvents =
     Html.Styled.Events.on "keydown" (toKeyDownDecoder keyDownEvents)
+
+
+autocomplete : Bool -> Attribute msg
+autocomplete bool =
+    Raw (Html.Styled.Attributes.autocomplete bool)
 
 
 
@@ -190,6 +201,9 @@ map fn attr =
 
         Ref string ->
             Ref string
+
+        Raw attribute ->
+            Raw (Html.Styled.Attributes.map fn attribute)
 
         Id string ->
             Id string
@@ -945,6 +959,9 @@ keepOnlyCssStyles attrs =
                     []
 
                 Ref _ ->
+                    []
+
+                Raw _ ->
                     []
 
                 IsDisabled _ ->

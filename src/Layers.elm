@@ -1,6 +1,7 @@
 module Layers exposing
     ( Model
     , Msg
+    , closeMenu
     , idForItem
     , init
     , toggleMenu
@@ -67,8 +68,33 @@ toggleMenu :
     }
     -> ( model, Cmd msg )
 toggleMenu options =
+    let
+        (Model model) =
+            options.model
+    in
     update
-        { msg = Open options.item
+        { msg =
+            if Dict.member options.item model.open then
+                Close options.item
+
+            else
+                Open options.item
+        , model = options.model
+        , toAppModel = options.toAppModel
+        , toAppMsg = options.toAppMsg
+        }
+
+
+closeMenu :
+    { item : item
+    , model : Model item
+    , toAppMsg : Msg item -> msg
+    , toAppModel : Model item -> model
+    }
+    -> ( model, Cmd msg )
+closeMenu options =
+    update
+        { msg = Close options.item
         , model = options.model
         , toAppModel = options.toAppModel
         , toAppMsg = options.toAppMsg

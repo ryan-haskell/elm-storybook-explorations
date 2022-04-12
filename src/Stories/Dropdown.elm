@@ -4,6 +4,7 @@ import Browser.Dom
 import Layers
 import Layers.Dropdown
 import List.Extra
+import Simple.Fuzzy
 import Storybook.Component exposing (Component)
 import Storybook.Controls
 import Ui
@@ -53,8 +54,9 @@ type Msg
     | UserClickedSelect
     | UserClickedOption Fruit
     | UserChangedSearchInput String
-    | UserPressedArrowUpOnSelect
-    | UserPressedArrowDownOnSelect
+    | UserPressedArrowUp
+    | UserPressedArrowDown
+    | UserPressedEscape
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -76,6 +78,14 @@ update msg model =
                 , toAppModel = \layers -> { model | layers = layers }
                 }
 
+        UserPressedEscape ->
+            Layers.closeMenu
+                { item = DropdownMenu
+                , model = model.layers
+                , toAppMsg = LayersSentMsg
+                , toAppModel = \layers -> { model | layers = layers, searchInputValue = "" }
+                }
+
         UserClickedOption fruit ->
             ( { model | selected = Just fruit }
             , Cmd.none
@@ -86,58 +96,68 @@ update msg model =
             , Cmd.none
             )
 
-        UserPressedArrowUpOnSelect ->
-            ( { model | selected = previous model.selected }
+        UserPressedArrowUp ->
+            ( { model
+                | selected =
+                    allFruits
+                        |> List.filter (contains model.searchInputValue)
+                        |> previous model.selected
+              }
             , Cmd.none
             )
 
-        UserPressedArrowDownOnSelect ->
-            ( { model | selected = next model.selected }
+        UserPressedArrowDown ->
+            ( { model
+                | selected =
+                    allFruits
+                        |> List.filter (contains model.searchInputValue)
+                        |> next model.selected
+              }
             , Cmd.none
             )
 
 
-previous : Maybe Fruit -> Maybe Fruit
-previous maybe =
+previous : Maybe Fruit -> List Fruit -> Maybe Fruit
+previous maybe fruits =
     case maybe of
         Just fruit ->
             List.Extra.elemIndex fruit fruits
-                |> Maybe.map decrementIndex
-                |> Maybe.andThen getItemAtIndex
+                |> Maybe.map (\i -> decrementIndex i fruits)
+                |> Maybe.andThen (\i -> getItemAtIndex i fruits)
 
         Nothing ->
-            getItemAtIndex (List.length fruits - 1)
+            getItemAtIndex (List.length fruits - 1) fruits
 
 
-next : Maybe Fruit -> Maybe Fruit
-next maybe =
+next : Maybe Fruit -> List Fruit -> Maybe Fruit
+next maybe fruits =
     case maybe of
         Just fruit ->
             List.Extra.elemIndex fruit fruits
-                |> Maybe.map incrementIndex
-                |> Maybe.andThen getItemAtIndex
+                |> Maybe.map (\i -> incrementIndex i fruits)
+                |> Maybe.andThen (\i -> getItemAtIndex i fruits)
 
         Nothing ->
-            getItemAtIndex 0
+            getItemAtIndex 0 fruits
 
 
-decrementIndex : Int -> Int
-decrementIndex index =
-    keepWithinBounds (index - 1)
+decrementIndex : Int -> List Fruit -> Int
+decrementIndex index fruits =
+    keepWithinBounds (index - 1) fruits
 
 
-incrementIndex : Int -> Int
-incrementIndex index =
-    keepWithinBounds (index + 1)
+incrementIndex : Int -> List Fruit -> Int
+incrementIndex index fruits =
+    keepWithinBounds (index + 1) fruits
 
 
-keepWithinBounds : Int -> Int
-keepWithinBounds index =
+keepWithinBounds : Int -> List Fruit -> Int
+keepWithinBounds index fruits =
     clamp 0 (List.length fruits - 1) index
 
 
-getItemAtIndex : Int -> Maybe Fruit
-getItemAtIndex index =
+getItemAtIndex : Int -> List Fruit -> Maybe Fruit
+getItemAtIndex index fruits =
     List.Extra.getAt index fruits
 
 
@@ -160,8 +180,8 @@ type Fruit
     | Cherry
 
 
-fruits : List Fruit
-fruits =
+allFruits : List Fruit
+allFruits =
     [ Apple
     , Banana
     , Cherry
@@ -199,8 +219,8 @@ viewAppLayer model =
             , toLabel = fromFruitToLabel
             , buttonId = Layers.idForItem DropdownMenu model.layers
             , onSelectClicked = UserClickedSelect
-            , onSelectArrowUp = UserPressedArrowUpOnSelect
-            , onSelectArrowDown = UserPressedArrowDownOnSelect
+            , onSelectArrowUp = UserPressedArrowUp
+            , onSelectArrowDown = UserPressedArrowDown
             , selected = model.selected
             }
         , Ui.Typography.p100 [ Ui.Attr.width.px216, Ui.Attr.relative ] "Hey I'm a paragraph, and I love blocking dropdown menus!! Even though this has a higher z-index, we will never see it block the dropdown menu!"
@@ -227,19 +247,22 @@ viewLayerItem model id item parent =
                     , items =
                         List.concat
                             [ [ Ui.Dropdown.group "Fruits" ]
-                            , fruits
+                            , allFruits
                                 |> List.filter (contains model.searchInputValue)
                                 |> List.map Ui.Dropdown.item
                             ]
                     , searchInputValue = model.searchInputValue
                     , onOptionClicked = UserClickedOption
                     , onSearchInputChanged = UserChangedSearchInput
+                    , onArrowUp = UserPressedArrowUp
+                    , onArrowDown = UserPressedArrowDown
+                    , onEscape = UserPressedEscape
                     }
                 )
 
 
 contains : String -> Fruit -> Bool
 contains searchString fruit =
-    String.contains
-        (String.toLower searchString)
-        (String.toLower (fromFruitToLabel fruit))
+    Simple.Fuzzy.match
+        searchString
+        (fromFruitToLabel fruit)

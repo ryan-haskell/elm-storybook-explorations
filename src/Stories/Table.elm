@@ -3,6 +3,7 @@ module Stories.Table exposing (main)
 import Storybook.Component exposing (Component)
 import Storybook.Controls
 import Ui
+import Ui.Attr
 import Ui.Badge
 import Ui.Table
 import Ui.Table.Column
@@ -62,39 +63,49 @@ fromStatusToBadge status =
 items : List Row
 items =
     [ { person = { name = "Ryan Haskell-Glatz" }
-      , status = Online
+      , status = Invisible
       , team = "Frontend Engineers"
       }
     , { person = { name = "HyFlicker" }
       , status = DoNotDisturb
       , team = "NodeJS CRM Lords"
       }
-    , { person = { name = "Rosie" }
+    , { person = { name = "Rosie the Dog" }
       , status = Away
       , team = "Doggos"
+      }
+    , { person = { name = "Duncan Malashock" }
+      , status = Online
+      , team = "Frontend Engineers"
+      }
+    , { person = { name = "Jacob Bolda" }
+      , status = Offline
+      , team = "Streamlords"
       }
     ]
 
 
 view : () -> Ui.Html msg
 view _ =
-    Ui.Table.view
-        { columns =
-            [ Ui.Table.Column.person
-                { label = "User"
-                , toPerson = .person
-                }
-            , Ui.Table.Column.badge
-                { label = "Status"
-                , toBadge = \row -> fromStatusToBadge row.status
-                }
-            , Ui.Table.Column.string
-                { label = "Team"
-                , toString = .team
-                }
-            , Ui.Table.Column.actions
-                { options = []
-                }
-            ]
-        , items = items
-        }
+    Ui.el [ Ui.Attr.height.max.px273 ]
+        (Ui.Table.view
+            { columns =
+                [ Ui.Table.Column.person
+                    { label = "Person"
+                    , toPerson = .person
+                    }
+                , Ui.Table.Column.badge
+                    { label = "Status"
+                    , toBadge = \row -> fromStatusToBadge row.status
+                    }
+                , Ui.Table.Column.string
+                    { label = "Team"
+                    , toString = .team
+                    }
+                , Ui.Table.Column.actions
+                    { options = []
+                    }
+                ]
+            , items = items
+            }
+        )

@@ -15,7 +15,7 @@ module Ui.Attr exposing
     , inherit, wrap, clip, ellipsis, scroll, ref
     , isDisabled
     , pointerEventsNone
-    , relative, absolute
+    , relative, absolute, sticky
     , z1, z2
     , onKeyPressed, id, autocomplete
     , shrink
@@ -51,7 +51,7 @@ module Ui.Attr exposing
 
 ## Layers
 
-@docs relative, absolute
+@docs relative, absolute, sticky
 @docs z1, z2
 
 
@@ -313,6 +313,16 @@ absolute =
     Class "elm-absolute"
 
 
+sticky : { top : Attribute msg }
+sticky =
+    { top =
+        Styles
+            [ Css.position Css.sticky
+            , Css.top Css.zero
+            ]
+    }
+
+
 z1 : Attribute msg
 z1 =
     Styles [ Css.zIndex (Css.int 1) ]
@@ -350,7 +360,9 @@ height :
     , px20 : Attribute msg
     , px32 : Attribute msg
     , px80 : Attribute msg
-    , max : { px273 : Attribute msg }
+    , max :
+        { px273 : Attribute msg
+        }
     }
 height =
     { px16 = fromPixels Css.height 16

@@ -50,7 +50,6 @@ globalCss =
     Css.Global.global
         [ Css.Global.everything
             [ Css.boxSizing Css.borderBox
-            , Css.minHeight Css.zero
             , Css.margin Css.zero
             , Css.padding Css.zero
             , Css.backgroundColor Css.transparent

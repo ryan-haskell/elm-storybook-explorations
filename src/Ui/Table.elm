@@ -25,6 +25,7 @@ view options =
                 [ Ui.Attr.backgroundColor Ui.Palette.n300
                 , Ui.Attr.fontColor Ui.Palette.n700
                 , Ui.Attr.padXY.px24.px16
+                , Ui.Attr.sticky.top
                 ]
                 [ Ui.Typography.h100 [] (Ui.Table.Column.toLabel column) ]
 
@@ -49,6 +50,7 @@ view options =
     Ui.table
         [ Ui.Attr.radius.px4
         , Ui.Attr.border.px1 Ui.Palette.n300
+        , Ui.Attr.scroll
         ]
         [ viewTableHeader
         , viewTableBody

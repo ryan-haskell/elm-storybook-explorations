@@ -32,7 +32,8 @@ type Avatar
 viewCircle : Avatar -> Ui.Html msg
 viewCircle (Avatar options) =
     Ui.Typography.p100
-        [ Ui.Attr.width.px32
+        [ Ui.Attr.shrink False
+        , Ui.Attr.width.px32
         , Ui.Attr.height.px32
         , Ui.Attr.radius.circle
         , Ui.Attr.align.center

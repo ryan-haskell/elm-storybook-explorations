@@ -5,6 +5,7 @@ module Ui exposing
     , clickable
     , input, label
     , icon
+    , table, tbody, thead, tr, th, td
     )
 
 {-|
@@ -15,6 +16,8 @@ module Ui exposing
 @docs clickable
 @docs input, label
 @docs icon
+
+@docs table, tbody, thead, tr, th, td
 
 -}
 
@@ -53,6 +56,7 @@ globalCss =
             , Css.backgroundColor Css.transparent
             , Css.borderStyle Css.none
             , Css.property "font" "inherit"
+            , Css.textAlign Css.left
             , Css.lineHeight Css.inherit
             , Css.color Css.inherit
             ]
@@ -66,6 +70,24 @@ globalCss =
             ]
         , Css.Global.input
             [ Css.width (Css.pct 100)
+            ]
+
+        -- TABLES
+        , Css.Global.table
+            [ Css.property "display" "grid"
+            , Css.borderCollapse Css.collapse
+            , Css.minWidth (Css.pct 100)
+            , Css.property "grid-template-columns" "minmax(150px, 250px) minmax(150px, 250px) minmax(150px, 250px) minmax(150px, 1fr)"
+            ]
+        , Css.Global.each [ Css.Global.thead, Css.Global.tbody, Css.Global.tr ]
+            [ Css.property "display" "contents"
+            ]
+
+        -- TEXT ELLIPSIS
+        , Css.Global.selector ".ellipsis, .ellipsis > span"
+            [ Css.overflow Css.hidden
+            , Css.textOverflow Css.ellipsis
+            , Css.whiteSpace Css.noWrap
             ]
 
         -- Ui.col alignment
@@ -246,4 +268,49 @@ rowWithTag tag attrs children =
             :: Html.Styled.Attributes.css rowStyles
             :: Ui.Attr.toAttributes attrs
         )
+        children
+
+
+customHtml : String -> List (Attribute msg) -> List (Html msg) -> Html msg
+customHtml tagName attrs children =
+    Html.Styled.node tagName
+        (Ui.Attr.toAttributes attrs)
+        children
+
+
+
+-- TABLES
+
+
+table : List (Attribute msg) -> List (Html msg) -> Html msg
+table attrs children =
+    customHtml "table" attrs children
+
+
+tbody : List (Attribute msg) -> List (Html msg) -> Html msg
+tbody attrs children =
+    customHtml "tbody" attrs children
+
+
+thead : List (Attribute msg) -> List (Html msg) -> Html msg
+thead attrs children =
+    customHtml "thead" attrs children
+
+
+tr : List (Attribute msg) -> List (Html msg) -> Html msg
+tr attrs children =
+    customHtml "tr" attrs children
+
+
+th : List (Attribute msg) -> List (Html msg) -> Html msg
+th attrs children =
+    rowWithTag Html.Styled.th
+        (Ui.Attr.align.centerY :: attrs)
+        children
+
+
+td : List (Attribute msg) -> List (Html msg) -> Html msg
+td attrs children =
+    rowWithTag Html.Styled.td
+        (Ui.Attr.align.centerY :: attrs)
         children

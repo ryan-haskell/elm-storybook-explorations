@@ -12,12 +12,13 @@ module Ui.Attr exposing
     , transition
     , whenHovered, whenDisabled, whenFocused, whenPressed
     , cursor, outline
-    , inherit, wrap, scroll, ref
+    , inherit, wrap, clip, ellipsis, scroll, ref
     , isDisabled
     , pointerEventsNone
     , relative, absolute
     , z1, z2
     , onKeyPressed, id, autocomplete
+    , shrink
     )
 
 {-|
@@ -43,7 +44,7 @@ module Ui.Attr exposing
 @docs whenHovered, whenDisabled, whenFocused, whenPressed
 @docs cursor, outline
 
-@docs inherit, wrap, scroll, ref
+@docs inherit, wrap, clip, ellipsis, scroll, ref
 @docs isDisabled
 @docs pointerEventsNone
 
@@ -263,6 +264,29 @@ scroll =
     Styles [ Css.overflow Css.auto ]
 
 
+clip : Attribute msg
+clip =
+    Styles [ Css.overflow Css.hidden ]
+
+
+ellipsis : Attribute msg
+ellipsis =
+    Class "ellipsis"
+
+
+shrink : Bool -> Attribute msg
+shrink bool =
+    Styles
+        [ Css.flexShrink
+            (if bool then
+                Css.int 1
+
+             else
+                Css.int 0
+            )
+        ]
+
+
 wrap : { none : Attribute msg }
 wrap =
     { none = Styles [ Css.whiteSpace Css.noWrap ]
@@ -306,6 +330,7 @@ width :
     , px80 : Attribute msg
     , px216 : Attribute msg
     , fill : Attribute msg
+    , max : { fill : Attribute msg }
     }
 width =
     { px16 = fromPixels Css.width 16
@@ -314,6 +339,9 @@ width =
     , px80 = fromPixels Css.width 80
     , px216 = fromPixels Css.width 216
     , fill = Styles [ Css.width (Css.pct 100) ]
+    , max =
+        { fill = Styles [ Css.width (Css.pct 100) ]
+        }
     }
 
 
@@ -341,12 +369,18 @@ border :
     , left :
         { px2 : Ui.Palette.Color -> Attribute msg
         }
+    , bottom :
+        { px1 : Ui.Palette.Color -> Attribute msg
+        }
     }
 border =
     { none = Styles [ Css.border Css.zero ]
     , px1 = toBorder 1
     , left =
         { px2 = toBorderLeft 2
+        }
+    , bottom =
+        { px1 = toBorderBottom 1
         }
     }
 
@@ -642,6 +676,7 @@ padXY :
         , px8 : Attribute msg
         , px12 : Attribute msg
         , px16 : Attribute msg
+        , px24 : Attribute msg
         , px32 : Attribute msg
         , px40 : Attribute msg
         }
@@ -652,6 +687,7 @@ padXY :
         , px8 : Attribute msg
         , px12 : Attribute msg
         , px16 : Attribute msg
+        , px24 : Attribute msg
         , px32 : Attribute msg
         , px40 : Attribute msg
         }
@@ -662,6 +698,7 @@ padXY :
         , px8 : Attribute msg
         , px12 : Attribute msg
         , px16 : Attribute msg
+        , px24 : Attribute msg
         , px32 : Attribute msg
         , px40 : Attribute msg
         }
@@ -672,6 +709,7 @@ padXY :
         , px8 : Attribute msg
         , px12 : Attribute msg
         , px16 : Attribute msg
+        , px24 : Attribute msg
         , px32 : Attribute msg
         , px40 : Attribute msg
         }
@@ -682,6 +720,7 @@ padXY :
         , px8 : Attribute msg
         , px12 : Attribute msg
         , px16 : Attribute msg
+        , px24 : Attribute msg
         , px32 : Attribute msg
         , px40 : Attribute msg
         }
@@ -692,6 +731,18 @@ padXY :
         , px8 : Attribute msg
         , px12 : Attribute msg
         , px16 : Attribute msg
+        , px24 : Attribute msg
+        , px32 : Attribute msg
+        , px40 : Attribute msg
+        }
+    , px24 :
+        { zero : Attribute msg
+        , px4 : Attribute msg
+        , px6 : Attribute msg
+        , px8 : Attribute msg
+        , px12 : Attribute msg
+        , px16 : Attribute msg
+        , px24 : Attribute msg
         , px32 : Attribute msg
         , px40 : Attribute msg
         }
@@ -702,6 +753,7 @@ padXY :
         , px8 : Attribute msg
         , px12 : Attribute msg
         , px16 : Attribute msg
+        , px24 : Attribute msg
         , px32 : Attribute msg
         , px40 : Attribute msg
         }
@@ -712,6 +764,7 @@ padXY :
         , px8 : Attribute msg
         , px12 : Attribute msg
         , px16 : Attribute msg
+        , px24 : Attribute msg
         , px32 : Attribute msg
         , px40 : Attribute msg
         }
@@ -723,6 +776,7 @@ padXY =
     , px8 = toPadXY "8px"
     , px12 = toPadXY "12px"
     , px16 = toPadXY "16px"
+    , px24 = toPadXY "24px"
     , px32 = toPadXY "32px"
     , px40 = toPadXY "40px"
     }
@@ -847,6 +901,15 @@ toBorderLeft px color =
         ]
 
 
+toBorderBottom : Float -> Ui.Palette.Color -> Attribute msg
+toBorderBottom px color =
+    Styles
+        [ Css.borderBottomStyle Css.solid
+        , Css.borderBottomColor color
+        , Css.borderBottomWidth (Css.px px)
+        ]
+
+
 toBorderRadius : Float -> Attribute msg
 toBorderRadius px =
     Styles
@@ -919,6 +982,7 @@ toPadXY :
         , px8 : Attribute msg
         , px12 : Attribute msg
         , px16 : Attribute msg
+        , px24 : Attribute msg
         , px32 : Attribute msg
         , px40 : Attribute msg
         }
@@ -929,6 +993,7 @@ toPadXY xValue =
     , px8 = Styles [ Css.property "padding" ("8px " ++ xValue) ]
     , px12 = Styles [ Css.property "padding" ("12px " ++ xValue) ]
     , px16 = Styles [ Css.property "padding" ("16px " ++ xValue) ]
+    , px24 = Styles [ Css.property "padding" ("24px " ++ xValue) ]
     , px32 = Styles [ Css.property "padding" ("32px " ++ xValue) ]
     , px40 = Styles [ Css.property "padding" ("40px " ++ xValue) ]
     }

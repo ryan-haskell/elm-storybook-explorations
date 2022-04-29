@@ -23,7 +23,7 @@ cd elm-storybook
 
 # and run it with node!
 npm install
-npm run storybook
+npm run storybook:watch
 ```
 
 ## "What is it for?"

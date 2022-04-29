@@ -149,7 +149,7 @@ fromTabToPill tab label =
 
 
 fromTabToPillValue : Tab -> String
-fromTabToPillValue tab =
+fromTabToPillValue _ =
     "6"
 
 

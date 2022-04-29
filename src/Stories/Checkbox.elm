@@ -3,7 +3,7 @@ module Stories.Checkbox exposing (main)
 import Storybook.Component exposing (Component)
 import Storybook.Controls
 import Ui
-import Ui.Attr exposing (isDisabled)
+import Ui.Attr
 import Ui.Checkbox
 
 

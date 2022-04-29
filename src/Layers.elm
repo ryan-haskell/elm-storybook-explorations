@@ -243,18 +243,6 @@ view options =
         ]
 
 
-viewButton :
-    { item : item
-    , model : Model item
-    , toAppMsg : Msg item -> msg
-    }
-    -> List (Html.Attribute msg)
-    -> List (Html msg)
-    -> Html msg
-viewButton options attributes children =
-    Html.button (attributes ++ attributesFor options) children
-
-
 
 -- INTERNALS
 
@@ -262,31 +250,6 @@ viewButton options attributes children =
 toMenuId : Int -> String
 toMenuId index =
     "elm-layers-menu-" ++ String.fromInt (index + 1)
-
-
-attributesFor :
-    { item : item
-    , model : Model item
-    , toAppMsg : Msg item -> msg
-    }
-    -> List (Html.Attribute msg)
-attributesFor options =
-    let
-        (Model model) =
-            options.model
-
-        attributes : List (Html.Attribute msg)
-        attributes =
-            [ Events.onClick (Open options.item |> options.toAppMsg)
-            , Attr.class "elm-layers__button"
-            ]
-    in
-    case Dict.get options.item model.open of
-        Just data ->
-            Attr.id data.id :: attributes
-
-        Nothing ->
-            attributes
 
 
 idForItem : item -> Model item -> Maybe String

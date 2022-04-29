@@ -171,11 +171,6 @@ el attrs child =
     rowWithTag Html.Styled.div attrs [ child ]
 
 
-absolute : List (Attribute msg) -> Html msg -> Html msg
-absolute attrs child =
-    rowWithTag Html.Styled.div (Ui.Attr.absolute :: attrs) [ child ]
-
-
 label : List (Attribute msg) -> Html msg -> Html msg
 label attrs child =
     rowWithTag Html.Styled.label attrs [ child ]

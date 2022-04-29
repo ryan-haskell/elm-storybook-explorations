@@ -3,7 +3,6 @@ module Ui.Steps exposing (view)
 import List.Extra
 import Ui
 import Ui.Attr
-import Ui.Badge
 import Ui.Icon
 import Ui.Palette
 import Ui.Typography

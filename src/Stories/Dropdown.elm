@@ -84,7 +84,7 @@ update msg model =
                 , onOpenComplete = LayersOpenedMenu
                 }
 
-        LayersOpenedMenu menuId item ->
+        LayersOpenedMenu menuId _ ->
             ( model
             , Browser.Dom.focus
                 (toSearchInputId menuId)
@@ -200,7 +200,7 @@ getItemAtIndex index fruits =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions model =
+subscriptions _ =
     Sub.none
 
 

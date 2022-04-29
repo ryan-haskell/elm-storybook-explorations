@@ -2,7 +2,7 @@ module Ui.Checkbox exposing (State(..), view)
 
 import Ui
 import Ui.Action
-import Ui.Attr exposing (isDisabled)
+import Ui.Attr
 import Ui.Icon
 import Ui.Palette
 import Ui.Typography

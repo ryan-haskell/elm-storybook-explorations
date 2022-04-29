@@ -352,7 +352,8 @@ border =
 
 
 radius :
-    { px4 : Attribute msg
+    { circle : Attribute msg
+    , px4 : Attribute msg
     , px8 : Attribute msg
     , top : { px4 : Attribute msg }
     , bottom : { px4 : Attribute msg }
@@ -360,7 +361,8 @@ radius :
     , right : { px4 : Attribute msg }
     }
 radius =
-    { px4 = toBorderRadius 4
+    { circle = toBorderRadius 9999
+    , px4 = toBorderRadius 4
     , px8 = toBorderRadius 8
     , top = { px4 = toBorderRadiusTop 4 }
     , bottom = { px4 = toBorderRadiusBottom 4 }
